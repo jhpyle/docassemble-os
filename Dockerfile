@@ -17,6 +17,8 @@ unzip \
 git \
 locales \
 apache2 \
+apache2-utils \
+apache2-dev \
 postgresql \
 libapache2-mod-xsendfile \
 gcc \
