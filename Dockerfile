@@ -111,7 +111,10 @@ zlib1g-dev \
 libncurses5-dev \
 libncursesw5-dev \
 libreadline-dev \
-libsqlite3-dev
+libsqlite3-dev \
+liblapack-dev \
+libblas-dev \
+gfortran
 RUN DEBIAN_FRONTEND=noninteractive \
 apt-get -q -y install \
 libgdbm-dev \
