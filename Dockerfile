@@ -137,7 +137,6 @@ cd /opt \
 RUN DEBIAN_FRONTEND=noninteractive TERM=xterm \
 cd /tmp \
 && mkdir -p /etc/ssl/docassemble \
-   /usr/share/docassemble/local \
    /usr/share/docassemble/local3.6 \
    /usr/share/docassemble/certs \
    /usr/share/docassemble/backup \
