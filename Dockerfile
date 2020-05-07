@@ -162,6 +162,7 @@ bash -c \
 && echo '{ \"args\": [\"--no-sandbox\"] }' > ~/puppeteer-config.json \
 && touch ~/.profile \
 && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash \
+&& cd ~ \
 && source ~/.profile \
 && nvm install 12.6.0 \
 && npm install mermaid.cli@0.5.1 \
