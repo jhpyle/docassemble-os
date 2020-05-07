@@ -3,9 +3,9 @@ RUN DEBIAN_FRONTEND=noninteractive \
 bash -c \
 'echo -e "deb http://deb.debian.org/debian buster main contrib\n\
 deb http://deb.debian.org/debian buster-updates main\n\
-deb http://security.debian.org/debian-security buster/updates main\n\
+deb http://security.debian.org/debian-security buster/updates main contrib\n\
 deb http://ftp.debian.org/debian buster-backports main" > /etc/apt/sources.list\
-&& apt-get -y update'
+&& apt-get -y update && apt-get -y upgrade'
 RUN DEBIAN_FRONTEND=noninteractive \
 apt-get -q -y install \
 apt-utils \
@@ -161,10 +161,10 @@ bash -c \
 "cd /tmp \
 && echo '{ \"args\": [\"--no-sandbox\"] }' > ~/puppeteer-config.json \
 && touch ~/.profile \
-&& curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash \
+&& curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash \
 && source ~/.profile \
 && nvm install 12.6.0 \
-&& npm install mermaid.cli \
+&& npm install mermaid.cli@0.5.1 \
 && rm ~/.profile"
 USER root
 RUN DEBIAN_FRONTEND=noninteractive TERM=xterm \
