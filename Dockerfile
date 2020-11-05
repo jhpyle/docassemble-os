@@ -125,7 +125,8 @@ liblzma-dev \
 libffi-dev \
 uuid-dev
 RUN DEBIAN_FRONTEND=noninteractive \
-cd /opt \
+sed -i 's/<policy domain="coder" rights="none" pattern="PDF" \/>/<policy domain="coder" rights="read | write" pattern="PDF" \/>/' /etc/ImageMagick-6/policy.xml \
+&& cd /opt \
 && wget -O Python-3.6.9.tgz https://www.python.org/ftp/python/3.6.9/Python-3.6.9.tgz \
 && tar -zxf Python-3.6.9.tgz \
 && rm Python-3.6.9.tgz \
