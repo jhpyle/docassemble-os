@@ -127,10 +127,10 @@ uuid-dev
 RUN DEBIAN_FRONTEND=noninteractive \
 sed -i 's/<policy domain="coder" rights="none" pattern="PDF" \/>/<policy domain="coder" rights="read | write" pattern="PDF" \/>/' /etc/ImageMagick-6/policy.xml \
 && cd /opt \
-&& wget -O Python-3.6.9.tgz https://www.python.org/ftp/python/3.6.9/Python-3.6.9.tgz \
-&& tar -zxf Python-3.6.9.tgz \
-&& rm Python-3.6.9.tgz \
-&& cd Python-3.6.9 \
+&& wget -O Python-3.6.12.tgz https://www.python.org/ftp/python/3.6.12/Python-3.6.12.tgz \
+&& tar -zxf Python-3.6.12.tgz \
+&& rm Python-3.6.12.tgz \
+&& cd Python-3.6.12 \
 && ./configure --enable-shared --enable-ipv6 --enable-loadable-sqlite-extensions --with-dbmliborder=bdb:gdbm --with-computed-gotos --without-ensurepip --with-system-expat --with-system-libmpdec --with-system-ffi --prefix=/usr \
 && make \
 && make altinstall \
