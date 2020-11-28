@@ -125,7 +125,12 @@ liblzma-dev \
 libffi-dev \
 uuid-dev
 RUN DEBIAN_FRONTEND=noninteractive \
-sed -i 's/<policy domain="coder" rights="none" pattern="PDF" \/>/<policy domain="coder" rights="read | write" pattern="PDF" \/>/' /etc/ImageMagick-6/policy.xml \
+apt-get -q -y install -t buster-backports libreoffice \
+&& cd /tmp \
+&& wget -q https://github.com/jgm/pandoc/releases/download/2.11.2/pandoc-2.11.2-1-amd64.deb \
+&& dpkg -i pandoc-2.11.2-1-amd64.deb \
+&& rm pandoc-2.11.2-1-amd64.deb \
+&& sed -i 's/<policy domain="coder" rights="none" pattern="PDF" \/>/<policy domain="coder" rights="read | write" pattern="PDF" \/>/' /etc/ImageMagick-6/policy.xml \
 && cd /opt \
 && wget -O Python-3.8.6.tgz https://www.python.org/ftp/python/3.8.6/Python-3.8.6.tgz \
 && tar -zxf Python-3.8.6.tgz \
