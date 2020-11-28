@@ -127,10 +127,10 @@ uuid-dev
 RUN DEBIAN_FRONTEND=noninteractive \
 sed -i 's/<policy domain="coder" rights="none" pattern="PDF" \/>/<policy domain="coder" rights="read | write" pattern="PDF" \/>/' /etc/ImageMagick-6/policy.xml \
 && cd /opt \
-&& wget -O Python-3.6.12.tgz https://www.python.org/ftp/python/3.6.12/Python-3.6.12.tgz \
-&& tar -zxf Python-3.6.12.tgz \
-&& rm Python-3.6.12.tgz \
-&& cd Python-3.6.12 \
+&& wget -O Python-3.8.6.tgz https://www.python.org/ftp/python/3.8.6/Python-3.8.6.tgz \
+&& tar -zxf Python-3.8.6.tgz \
+&& rm Python-3.8.6.tgz \
+&& cd Python-3.8.6 \
 && ./configure --enable-shared --enable-ipv6 --enable-loadable-sqlite-extensions --with-dbmliborder=bdb:gdbm --with-computed-gotos --without-ensurepip --with-system-expat --with-system-libmpdec --with-system-ffi --prefix=/usr \
 && make \
 && make altinstall \
@@ -138,7 +138,7 @@ sed -i 's/<policy domain="coder" rights="none" pattern="PDF" \/>/<policy domain=
 RUN DEBIAN_FRONTEND=noninteractive TERM=xterm \
 cd /tmp \
 && mkdir -p /etc/ssl/docassemble \
-   /usr/share/docassemble/local3.6 \
+   /usr/share/docassemble/local3.8 \
    /usr/share/docassemble/certs \
    /usr/share/docassemble/backup \
    /usr/share/docassemble/config \
