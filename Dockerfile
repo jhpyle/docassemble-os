@@ -128,9 +128,9 @@ uuid-dev
 RUN DEBIAN_FRONTEND=noninteractive \
 apt-get -q -y install -t buster-backports libreoffice \
 && cd /tmp \
-&& wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-&& dpkg -i ./google-chrome-stable_current_amd64.deb
-&& rm ./google-chrome-stable_current_amd64.deb
+&& wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
+&& dpkg -i ./google-chrome-stable_current_amd64.deb \
+&& rm ./google-chrome-stable_current_amd64.deb \
 && wget -q https://github.com/jgm/pandoc/releases/download/2.11.2/pandoc-2.11.2-1-amd64.deb \
 && dpkg -i pandoc-2.11.2-1-amd64.deb \
 && rm pandoc-2.11.2-1-amd64.deb \
