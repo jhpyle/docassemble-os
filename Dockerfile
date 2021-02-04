@@ -114,7 +114,8 @@ libreadline-dev \
 libsqlite3-dev \
 liblapack-dev \
 libblas-dev \
-gfortran
+gfortran \
+unixodbc-dev
 RUN DEBIAN_FRONTEND=noninteractive \
 apt-get -q -y install \
 libgdbm-dev \
@@ -127,6 +128,9 @@ uuid-dev
 RUN DEBIAN_FRONTEND=noninteractive \
 apt-get -q -y install -t buster-backports libreoffice \
 && cd /tmp \
+&& wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+&& dpkg -i ./google-chrome-stable_current_amd64.deb
+&& rm ./google-chrome-stable_current_amd64.deb
 && wget -q https://github.com/jgm/pandoc/releases/download/2.11.2/pandoc-2.11.2-1-amd64.deb \
 && dpkg -i pandoc-2.11.2-1-amd64.deb \
 && rm pandoc-2.11.2-1-amd64.deb \
@@ -175,10 +179,6 @@ bash -c \
 && rm ~/.profile"
 USER root
 RUN DEBIAN_FRONTEND=noninteractive TERM=xterm \
-cd /usr/share/docassemble \
-&& git clone https://github.com/letsencrypt/letsencrypt \
-&& cd letsencrypt \
-&& ./letsencrypt-auto --help \
 && echo "host   all   all  0.0.0.0/0   md5" >> /etc/postgresql/11/main/pg_hba.conf \
 && echo "listen_addresses = '*'" >> /etc/postgresql/11/main/postgresql.conf
 CMD ["bash"]
