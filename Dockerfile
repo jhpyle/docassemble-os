@@ -115,7 +115,8 @@ libsqlite3-dev \
 liblapack-dev \
 libblas-dev \
 gfortran \
-unixodbc-dev
+unixodbc-dev \
+libaugeas0
 RUN DEBIAN_FRONTEND=noninteractive \
 apt-get -q -y install \
 libgdbm-dev \
