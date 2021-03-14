@@ -116,7 +116,8 @@ liblapack-dev \
 libblas-dev \
 gfortran \
 unixodbc-dev \
-libaugeas0
+libaugeas0 \
+busybox
 RUN DEBIAN_FRONTEND=noninteractive \
 apt-get -q -y install \
 libgdbm-dev \
@@ -160,6 +161,7 @@ cd /tmp \
    /usr/share/docassemble/log \
    /tmp/docassemble \
    /var/www/html/log \
+   /var/www/nascent \
    /var/www/node_modules/.bin \
 && chown -R www-data.www-data /var/www \
 && chown www-data.www-data /var/run/uwsgi \
