@@ -133,16 +133,16 @@ apt-get -q -y install -t buster-backports libreoffice \
 && wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
 && dpkg -i ./google-chrome-stable_current_amd64.deb \
 && rm ./google-chrome-stable_current_amd64.deb \
-&& wget -q https://github.com/jgm/pandoc/releases/download/2.11.2/pandoc-2.11.2-1-amd64.deb \
-&& dpkg -i pandoc-2.11.2-1-amd64.deb \
-&& rm pandoc-2.11.2-1-amd64.deb \
+&& wget -q https://github.com/jgm/pandoc/releases/download/2.13/pandoc-2.13-1-amd64.deb \
+&& dpkg -i pandoc-2.13-1-amd64.deb \
+&& rm pandoc-2.13-1-amd64.deb \
 && sed -i 's/<policy domain="coder" rights="none" pattern="PDF" \/>/<policy domain="coder" rights="read | write" pattern="PDF" \/>/' /etc/ImageMagick-6/policy.xml \
 && cd /opt \
-&& wget -O Python-3.8.6.tgz https://www.python.org/ftp/python/3.8.6/Python-3.8.6.tgz \
-&& tar -zxf Python-3.8.6.tgz \
-&& rm Python-3.8.6.tgz \
-&& cd Python-3.8.6 \
-&& ./configure --enable-shared --enable-ipv6 --enable-loadable-sqlite-extensions --with-dbmliborder=bdb:gdbm --with-computed-gotos --without-ensurepip --with-system-expat --with-system-libmpdec --with-system-ffi --prefix=/usr \
+&& wget -O Python-3.8.10.tgz https://www.python.org/ftp/python/3.8.10/Python-3.8.10.tgz \
+&& tar -zxf Python-3.8.10.tgz \
+&& rm Python-3.8.10.tgz \
+&& cd Python-3.8.10 \
+&& ./configure --enable-shared --prefix=/usr \
 && make \
 && make altinstall \
 && cd /tmp
