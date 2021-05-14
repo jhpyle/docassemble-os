@@ -1,17 +1,13 @@
-FROM debian:buster
+FROM debian:testing
 RUN DEBIAN_FRONTEND=noninteractive \
 bash -c \
-'echo -e "deb http://deb.debian.org/debian buster main contrib\n\
-deb http://deb.debian.org/debian buster-updates main\n\
-deb http://security.debian.org/debian-security buster/updates main contrib\n\
-deb http://ftp.debian.org/debian buster-backports main" > /etc/apt/sources.list\
+'echo -e "deb http://deb.debian.org/debian testing main contrib\n\
+deb http://deb.debian.org/debian testing-updates main" > /etc/apt/sources.list\
 && apt-get -y update && apt-get -y upgrade'
 RUN DEBIAN_FRONTEND=noninteractive \
 apt-get -q -y install \
 apt-utils \
 tzdata \
-python \
-python-dev \
 wget \
 unzip \
 git \
@@ -54,20 +50,17 @@ dnsutils \
 build-essential \
 libsvm3 \
 libsvm-dev \
-liblinear3 \
+liblinear4 \
 liblinear-dev \
 libzbar-dev \
 libzbar0 \
 libgs-dev \
 default-libmysqlclient-dev \
 libgmp-dev \
-python-passlib \
+python3-passlib \
 libsasl2-dev \
 libldap2-dev \
-python3 \
 exim4-daemon-heavy \
-python3-venv \
-python3-dev \
 imagemagick \
 pdftk \
 pacpl \
@@ -128,8 +121,7 @@ liblzma-dev \
 libffi-dev \
 uuid-dev
 RUN DEBIAN_FRONTEND=noninteractive \
-apt-get -q -y install -t buster-backports libreoffice \
-&& cd /tmp \
+cd /tmp \
 && wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
 && dpkg -i ./google-chrome-stable_current_amd64.deb \
 && rm ./google-chrome-stable_current_amd64.deb \
@@ -182,6 +174,6 @@ bash -c \
 && rm ~/.profile"
 USER root
 RUN DEBIAN_FRONTEND=noninteractive TERM=xterm \
-&& echo "host   all   all  0.0.0.0/0   md5" >> /etc/postgresql/11/main/pg_hba.conf \
-&& echo "listen_addresses = '*'" >> /etc/postgresql/11/main/postgresql.conf
+&& echo "host   all   all  0.0.0.0/0   md5" >> /etc/postgresql/13/main/pg_hba.conf \
+&& echo "listen_addresses = '*'" >> /etc/postgresql/13/main/postgresql.conf
 CMD ["bash"]
