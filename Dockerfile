@@ -1,11 +1,12 @@
-FROM debian:testing
+FROM ubuntu:21.10
 RUN DEBIAN_FRONTEND=noninteractive \
-bash -c \
-'echo -e "deb http://deb.debian.org/debian testing main contrib\n\
-deb http://deb.debian.org/debian testing-updates main" > /etc/apt/sources.list\
-&& apt-get -y update && apt-get -y upgrade'
+apt-get -y update \
+&& apt-get -y upgrade
 RUN DEBIAN_FRONTEND=noninteractive \
-apt-get -q -y install \
+echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | debconf-set-selections \
+&& apt-get -q -y install language-pack-en \
+&& apt-get -q -y install ttf-mscorefonts-installer \
+&& apt-get -q -y install \
 apt-utils \
 tzdata \
 wget \
@@ -92,7 +93,6 @@ libaudio-flac-header-perl \
 ffmpeg \
 tesseract-ocr-all \
 libtesseract-dev \
-ttf-mscorefonts-installer \
 fonts-ebgaramond-extra \
 ghostscript \
 fonts-liberation \
@@ -124,7 +124,7 @@ uuid-dev \
 && apt-get -y autoremove
 RUN DEBIAN_FRONTEND=noninteractive \
 bash -c \
-'if [[ "$(dpkg --print-architecture)" == "amd64" ]]; then cd /tmp && wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && dpkg -i ./google-chrome-stable_current_amd64.deb && rm ./google-chrome-stable_current_amd64.deb && wget -q https://github.com/jgm/pandoc/releases/download/2.14.1/pandoc-2.14.1-1-amd64.deb && dpkg -i pandoc-2.14.1-1-amd64.deb && rm pandoc-2.14.1-1-amd64.deb; elif [[ "$(dpkg --print-architecture)" == "arm64" ]]; then cd /tmp && wget -q https://github.com/jgm/pandoc/releases/download/2.14.1/pandoc-2.14.1-1-arm64.deb && dpkg -i pandoc-2.14.1-1-arm64.deb && rm pandoc-2.14.1-1-arm64.deb; fi'
+'if [[ "$(dpkg --print-architecture)" == "amd64" ]]; then cd /tmp && wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && dpkg -i ./google-chrome-stable_current_amd64.deb && rm ./google-chrome-stable_current_amd64.deb && wget -q https://github.com/jgm/pandoc/releases/download/2.16.2/pandoc-2.16.2-1-amd64.deb && dpkg -i pandoc-2.16.2-1-amd64.deb && rm pandoc-2.16.2-1-amd64.deb; elif [[ "$(dpkg --print-architecture)" == "arm64" ]]; then cd /tmp && wget -q https://github.com/jgm/pandoc/releases/download/2.16.2/pandoc-2.16.2-1-arm64.deb && dpkg -i pandoc-2.16.2-1-arm64.deb && rm pandoc-2.16.2-1-arm64.deb; fi'
 RUN DEBIAN_FRONTEND=noninteractive \
 cd /tmp \
 && sed -i 's/<policy domain="coder" rights="none" pattern="PDF" \/>/<policy domain="coder" rights="read | write" pattern="PDF" \/>/' /etc/ImageMagick-6/policy.xml \
@@ -172,7 +172,6 @@ bash -c \
 && npm install mermaid.cli@0.5.1 \
 && rm ~/.profile"
 USER root
-RUN DEBIAN_FRONTEND=noninteractive TERM=xterm \
-&& echo "host   all   all  0.0.0.0/0   md5" >> /etc/postgresql/13/main/pg_hba.conf \
+RUN echo "host   all   all  0.0.0.0/0   md5" >> /etc/postgresql/13/main/pg_hba.conf \
 && echo "listen_addresses = '*'" >> /etc/postgresql/13/main/postgresql.conf
 CMD ["bash"]
