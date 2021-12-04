@@ -129,10 +129,10 @@ RUN DEBIAN_FRONTEND=noninteractive \
 cd /tmp \
 && sed -i 's/<policy domain="coder" rights="none" pattern="PDF" \/>/<policy domain="coder" rights="read | write" pattern="PDF" \/>/' /etc/ImageMagick-6/policy.xml \
 && cd /opt \
-&& wget -O Python-3.8.10.tgz https://www.python.org/ftp/python/3.8.10/Python-3.8.10.tgz \
-&& tar -zxf Python-3.8.10.tgz \
-&& rm Python-3.8.10.tgz \
-&& cd Python-3.8.10 \
+&& wget -O Python-3.8.12.tgz https://www.python.org/ftp/python/3.8.12/Python-3.8.12.tgz \
+&& tar -zxf Python-3.8.12.tgz \
+&& rm Python-3.8.12.tgz \
+&& cd Python-3.8.12 \
 && ./configure --enable-shared --prefix=/usr \
 && make \
 && make altinstall \
@@ -165,10 +165,10 @@ bash -c \
 "cd /tmp \
 && echo '{ \"args\": [\"--no-sandbox\"] }' > ~/puppeteer-config.json \
 && touch ~/.profile \
-&& curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash \
+&& curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash \
 && cd ~ \
 && source ~/.profile \
-&& nvm install 12.6.0 \
+&& nvm install 14.18.1 \
 && npm install mermaid.cli@0.5.1 \
 && rm ~/.profile"
 USER root
