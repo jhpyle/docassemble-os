@@ -120,11 +120,12 @@ libexpat1-dev \
 liblzma-dev \
 libffi-dev \
 uuid-dev \
+unoconv \
 && apt-get -y remove libreoffice-report-builder \
 && apt-get -y autoremove
 RUN DEBIAN_FRONTEND=noninteractive \
 bash -c \
-'if [[ "$(dpkg --print-architecture)" == "amd64" ]]; then cd /tmp && wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && dpkg -i ./google-chrome-stable_current_amd64.deb && rm ./google-chrome-stable_current_amd64.deb && wget -q https://github.com/jgm/pandoc/releases/download/2.16.2/pandoc-2.16.2-1-amd64.deb && dpkg -i pandoc-2.16.2-1-amd64.deb && rm pandoc-2.16.2-1-amd64.deb; elif [[ "$(dpkg --print-architecture)" == "arm64" ]]; then cd /tmp && wget -q https://github.com/jgm/pandoc/releases/download/2.16.2/pandoc-2.16.2-1-arm64.deb && dpkg -i pandoc-2.16.2-1-arm64.deb && rm pandoc-2.16.2-1-arm64.deb; fi'
+'if [[ "$(dpkg --print-architecture)" == "amd64" ]]; then cd /tmp && wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && dpkg -i ./google-chrome-stable_current_amd64.deb && rm ./google-chrome-stable_current_amd64.deb && wget -q https://github.com/jgm/pandoc/releases/download/2.17.0.1/pandoc-2.17.0.1-1-amd64.deb && dpkg -i pandoc-2.17.0.1-1-amd64.deb && rm pandoc-2.17.0.1-1-amd64.deb; elif [[ "$(dpkg --print-architecture)" == "arm64" ]]; then cd /tmp && wget -q https://github.com/jgm/pandoc/releases/download/2.17.0.1/pandoc-2.17.0.1-1-arm64.deb && dpkg -i pandoc-2.17.0.1-1-arm64.deb && rm pandoc-2.17.0.1-1-arm64.deb; fi'
 RUN DEBIAN_FRONTEND=noninteractive \
 cd /tmp \
 && sed -i 's/<policy domain="coder" rights="none" pattern="PDF" \/>/<policy domain="coder" rights="read | write" pattern="PDF" \/>/' /etc/ImageMagick-6/policy.xml \
