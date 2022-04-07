@@ -129,6 +129,7 @@ bash -c \
 RUN DEBIAN_FRONTEND=noninteractive \
 cd /tmp \
 && sed -i 's/<policy domain="coder" rights="none" pattern="PDF" \/>/<policy domain="coder" rights="read | write" pattern="PDF" \/>/' /etc/ImageMagick-6/policy.xml \
+&& sed -i 's/^#PATH/PATH/' /etc/crontab \
 && cd /opt \
 && wget -O Python-3.8.12.tgz https://www.python.org/ftp/python/3.8.12/Python-3.8.12.tgz \
 && tar -zxf Python-3.8.12.tgz \
