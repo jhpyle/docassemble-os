@@ -148,6 +148,7 @@ cd /tmp \
    /usr/share/docassemble/config \
    /usr/share/docassemble/webapp \
    /usr/share/docassemble/files \
+   /usr/share/docassemble/cron \
    /var/www/.pip \
    /var/www/.cache \
    /var/run/uwsgi \
@@ -158,7 +159,6 @@ cd /tmp \
    /var/www/node_modules/.bin \
 && chown -R www-data.www-data /var/www \
 && chown www-data.www-data /var/run/uwsgi \
-&& chsh -s /bin/bash www-data \
 && ln -s /var/www/node_modules/.bin/mmdc /usr/local/bin/mmdc \
 && npm install -g azure-storage-cmd
 USER www-data
