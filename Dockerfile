@@ -153,6 +153,7 @@ cd /tmp \
    /var/www/.pip \
    /var/www/.cache \
    /var/run/uwsgi \
+   /var/run/docassemble \
    /usr/share/docassemble/log \
    /tmp/docassemble \
    /var/www/html/log \
