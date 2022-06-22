@@ -149,6 +149,7 @@ cd /tmp \
    /usr/share/docassemble/webapp \
    /usr/share/docassemble/files \
    /usr/share/docassemble/cron \
+   /usr/share/docassemble/syslogng \
    /var/www/.pip \
    /var/www/.cache \
    /var/run/uwsgi \
