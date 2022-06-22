@@ -163,17 +163,17 @@ cd /tmp \
 && chown www-data.www-data /var/run/uwsgi \
 && chsh -s /bin/bash www-data \
 && ln -s /var/www/node_modules/.bin/mmdc /usr/local/bin/mmdc \
-&& npm install -g azure-storage-cmd
+&& curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 USER www-data
 RUN LC_CTYPE=C.UTF-8 LANG=C.UTF-8 \
 bash -c \
 "cd /tmp \
 && echo '{ \"args\": [\"--no-sandbox\"] }' > ~/puppeteer-config.json \
 && touch ~/.profile \
-&& curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash \
+&& curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash \
 && cd ~ \
 && source ~/.profile \
-&& nvm install 14.18.1 \
+&& nvm install 16.15.1 \
 && npm install mermaid.cli@0.5.1 \
 && rm ~/.profile"
 USER root
