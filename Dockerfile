@@ -68,6 +68,7 @@ pacpl \
 pandoc \
 texlive \
 texlive-luatex \
+texlive-xetex \
 texlive-latex-recommended \
 texlive-latex-extra \
 texlive-font-utils \
