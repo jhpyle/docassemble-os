@@ -120,7 +120,6 @@ libexpat1-dev \
 liblzma-dev \
 libffi-dev \
 uuid-dev \
-unoconv \
 && apt-get -y remove libreoffice-report-builder \
 && apt-get -y autoremove
 RUN DEBIAN_FRONTEND=noninteractive \
