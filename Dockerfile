@@ -3,9 +3,10 @@ RUN DEBIAN_FRONTEND=noninteractive \
 apt-get -y update \
 && apt-get -y upgrade
 RUN DEBIAN_FRONTEND=noninteractive \
-echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | debconf-set-selections \
+ln -snf /usr/share/zoneinfo/America/New_York /etc/localtime \
+&& echo America/New_York > /etc/timezone \
+&& echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | debconf-set-selections \
 && apt-get -q -y install language-pack-en \
-&& apt-get -q -y install ttf-mscorefonts-installer \
 && apt-get -q -y install \
 apt-utils \
 tzdata \
@@ -59,6 +60,8 @@ libgs-dev \
 default-libmysqlclient-dev \
 libgmp-dev \
 python3-passlib \
+python3-pip \
+python3-venv \
 libsasl2-dev \
 libldap2-dev \
 exim4-daemon-heavy \
@@ -122,6 +125,7 @@ liblzma-dev \
 libffi-dev \
 uuid-dev \
 && apt-get -y remove libreoffice-report-builder \
+&& apt-get -q -y install ttf-mscorefonts-installer \
 && apt-get -y autoremove
 RUN DEBIAN_FRONTEND=noninteractive \
 bash -c \
