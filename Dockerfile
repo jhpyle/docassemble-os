@@ -1,4 +1,4 @@
-FROM ubuntu:21.10
+FROM ubuntu:22.04
 RUN DEBIAN_FRONTEND=noninteractive \
 apt-get -y update \
 && apt-get -y upgrade
@@ -129,20 +129,11 @@ bash -c \
 RUN DEBIAN_FRONTEND=noninteractive \
 cd /tmp \
 && sed -i 's/<policy domain="coder" rights="none" pattern="PDF" \/>/<policy domain="coder" rights="read | write" pattern="PDF" \/>/' /etc/ImageMagick-6/policy.xml \
-&& sed -i 's/^#PATH/PATH/' /etc/crontab \
-&& cd /opt \
-&& wget -O Python-3.8.12.tgz https://www.python.org/ftp/python/3.8.12/Python-3.8.12.tgz \
-&& tar -zxf Python-3.8.12.tgz \
-&& rm Python-3.8.12.tgz \
-&& cd Python-3.8.12 \
-&& ./configure --enable-shared --enable-optimizations --prefix=/usr \
-&& make \
-&& make altinstall \
-&& cd /tmp
+&& sed -i 's/^#PATH/PATH/' /etc/crontab
 RUN DEBIAN_FRONTEND=noninteractive TERM=xterm \
 cd /tmp \
 && mkdir -p /etc/ssl/docassemble \
-   /usr/share/docassemble/local3.8 \
+   /usr/share/docassemble/local3.10 \
    /usr/share/docassemble/certs \
    /usr/share/docassemble/backup \
    /usr/share/docassemble/config \
@@ -177,6 +168,6 @@ bash -c \
 && npm install mermaid.cli@0.5.1 \
 && rm ~/.profile"
 USER root
-RUN echo "host   all   all  0.0.0.0/0   md5" >> /etc/postgresql/13/main/pg_hba.conf \
-&& echo "listen_addresses = '*'" >> /etc/postgresql/13/main/postgresql.conf
+RUN echo "host   all   all  0.0.0.0/0   md5" >> /etc/postgresql/14/main/pg_hba.conf \
+&& echo "listen_addresses = '*'" >> /etc/postgresql/14/main/postgresql.conf
 CMD ["bash"]
