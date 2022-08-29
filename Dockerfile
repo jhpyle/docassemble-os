@@ -129,7 +129,7 @@ uuid-dev \
 && apt-get -y autoremove
 RUN DEBIAN_FRONTEND=noninteractive \
 bash -c \
-'if [[ "$(dpkg --print-architecture)" == "amd64" ]]; then cd /tmp && wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && dpkg -i ./google-chrome-stable_current_amd64.deb && rm ./google-chrome-stable_current_amd64.deb && wget -q https://github.com/jgm/pandoc/releases/download/2.18/pandoc-2.18-1-amd64.deb && dpkg -i pandoc-2.18-1-amd64.deb && rm pandoc-2.18-1-amd64.deb; elif [[ "$(dpkg --print-architecture)" == "arm64" ]]; then cd /tmp && wget -q https://github.com/jgm/pandoc/releases/download/2.18/pandoc-2.18-1-arm64.deb && dpkg -i pandoc-2.18-1-arm64.deb && rm pandoc-2.18-1-arm64.deb; fi'
+'if [[ "$(dpkg --print-architecture)" == "amd64" ]]; then cd /tmp && wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && dpkg -i ./google-chrome-stable_current_amd64.deb && rm ./google-chrome-stable_current_amd64.deb && wget -q https://github.com/jgm/pandoc/releases/download/2.19/pandoc-2.19-2-amd64.deb && dpkg -i pandoc-2.19-2-amd64.deb && rm pandoc-2.19-2-amd64.deb; elif [[ "$(dpkg --print-architecture)" == "arm64" ]]; then cd /tmp && wget -q https://github.com/jgm/pandoc/releases/download/2.19/pandoc-2.19-2-arm64.deb && dpkg -i pandoc-2.19-2-arm64.deb && rm pandoc-2.19-2-arm64.deb; fi'
 RUN DEBIAN_FRONTEND=noninteractive \
 cd /tmp \
 && sed -i 's/<policy domain="coder" rights="none" pattern="PDF" \/>/<policy domain="coder" rights="read | write" pattern="PDF" \/>/' /etc/ImageMagick-6/policy.xml \
@@ -172,6 +172,13 @@ bash -c \
 && npm install mermaid.cli@0.5.1 \
 && rm ~/.profile"
 USER root
-RUN echo "host   all   all  0.0.0.0/0   md5" >> /etc/postgresql/14/main/pg_hba.conf \
-&& echo "listen_addresses = '*'" >> /etc/postgresql/14/main/postgresql.conf
+RUN bash -c "\
+if [[ \"$(dpkg --print-architecture)\" == \"arm64\" ]]; then \
+  sed -i \"s/scram-sha-256$/md5/\" /etc/postgresql/14/main/pg_hba.conf \
+  && echo \"password_encryption = md5\" >> /etc/postgresql/14/main/postgresql.conf; \
+  echo \"host   all   all  0.0.0.0/0   md5\" >> /etc/postgresql/14/main/pg_hba.conf; \
+else \
+  echo \"host   all   all  0.0.0.0/0   scram-sha-256\" >> /etc/postgresql/14/main/pg_hba.conf; \
+fi; \
+echo \"listen_addresses = '*'\" >> /etc/postgresql/14/main/postgresql.conf"
 CMD ["bash"]
