@@ -154,8 +154,8 @@ cd /tmp \
    /var/www/html/log \
    /var/www/nascent \
    /var/www/node_modules/.bin \
-&& chown -R www-data.www-data /var/www \
-&& chown www-data.www-data /var/run/uwsgi \
+&& chown -R www-data:www-data /var/www \
+&& chown www-data:www-data /var/run/uwsgi \
 && chsh -s /bin/bash www-data \
 && ln -s /var/www/node_modules/.bin/mmdc /usr/local/bin/mmdc \
 && curl -sL https://aka.ms/InstallAzureCLIDeb | bash
