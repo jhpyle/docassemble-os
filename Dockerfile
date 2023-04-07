@@ -32,11 +32,12 @@ automake \
 libjpeg-dev \
 libpq-dev \
 logrotate \
-nodejs \
 npm \
 cron \
 libxml2 \
 libxslt1.1 \
+libu2f-udev \
+libvulkan1 \
 libxml2-dev \
 libxslt1-dev \
 libcurl4-openssl-dev \
@@ -126,6 +127,11 @@ libffi-dev \
 uuid-dev \
 && apt-get -y remove libreoffice-report-builder \
 && apt-get -q -y install ttf-mscorefonts-installer \
+&& apt-get -q -y remove nodejs \
+&& apt-get -q -y remove nodejs-doc \
+&& apt-get -q -y autoremove \
+&& curl -fsSL https://deb.nodesource.com/setup_18.x | bash \
+&& apt-get install -y nodejs \
 && apt-get -y autoremove
 RUN DEBIAN_FRONTEND=noninteractive \
 bash -c \
