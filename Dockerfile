@@ -135,10 +135,10 @@ uuid-dev \
 && apt-get -y autoremove
 RUN DEBIAN_FRONTEND=noninteractive \
 bash -c \
-'if [[ "$(dpkg --print-architecture)" == "amd64" ]]; then cd /tmp && wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && dpkg -i ./google-chrome-stable_current_amd64.deb && rm ./google-chrome-stable_current_amd64.deb && wget -q https://github.com/jgm/pandoc/releases/download/3.1.2/pandoc-3.1.2-1-amd64.deb && dpkg -i pandoc-3.1.2-1-amd64.deb && rm pandoc-3.1.2-1-amd64.deb; elif [[ "$(dpkg --print-architecture)" == "arm64" ]]; then cd /tmp && wget -q https://github.com/jgm/pandoc/releases/download/3.1.2/pandoc-3.1.2-1-arm64.deb && dpkg -i pandoc-3.1.2-1-arm64.deb && rm pandoc-3.1.2-1-arm64.deb; fi'
+'if [[ "$(dpkg --print-architecture)" == "amd64" ]]; then cd /tmp && wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && dpkg -i ./google-chrome-stable_current_amd64.deb && rm ./google-chrome-stable_current_amd64.deb && wget -q https://github.com/jgm/pandoc/releases/download/3.1.2/pandoc-3.1.2-1-amd64.deb && dpkg -i pandoc-3.1.2-1-amd64.deb && rm pandoc-3.1.2-1-amd64.deb; elif [[ "$(dpkg --print-architecture)" == "arm64" ]]; then cd /tmp && wget -q https://github.com/jgm/pandoc/releases/download/3.1.2/pandoc-3.1.2-1-arm64.deb && dpkg -i pandoc-3.1.2-1-arm64.deb && rm pandoc-3.1.2-1-arm64.deb; fi'
 RUN DEBIAN_FRONTEND=noninteractive \
 cd /tmp \
-&& wget -O google-fonts.tar.gz https://github.com/google/fonts/archive/main.tar.gz \
+&& wget -q -O google-fonts.tar.gz https://github.com/google/fonts/archive/main.tar.gz \
 && tar -zxf google-fonts.tar.gz \
 && rm google-fonts.tar.gz \
 && mkdir -p /usr/share/fonts/truetype/google-fonts \
@@ -179,8 +179,9 @@ bash -c \
 && touch ~/.profile \
 && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash \
 && cd ~ \
+&& export NVM_DIR=\"$HOME/.nvm\" \
 && source ~/.profile \
-&& nvm install 16.15.1 \
+&& nvm install 18.15.0 \
 && npm install mermaid.cli@0.5.1 \
 && rm ~/.profile"
 USER root
