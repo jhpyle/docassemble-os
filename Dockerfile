@@ -132,10 +132,11 @@ uuid-dev \
 && apt-get -q -y autoremove \
 && curl -fsSL https://deb.nodesource.com/setup_18.x | bash \
 && apt-get install -y nodejs \
-&& apt-get -y autoremove
+&& apt-get -y autoremove \
+&& npm install -g mermaid.cli@0.5.1
 RUN DEBIAN_FRONTEND=noninteractive \
 bash -c \
-'if [[ "$(dpkg --print-architecture)" == "amd64" ]]; then cd /tmp && wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && dpkg -i ./google-chrome-stable_current_amd64.deb && rm ./google-chrome-stable_current_amd64.deb && wget -q https://github.com/jgm/pandoc/releases/download/3.1.2/pandoc-3.1.2-1-amd64.deb && dpkg -i pandoc-3.1.2-1-amd64.deb && rm pandoc-3.1.2-1-amd64.deb; elif [[ "$(dpkg --print-architecture)" == "arm64" ]]; then cd /tmp && wget -q https://github.com/jgm/pandoc/releases/download/3.1.2/pandoc-3.1.2-1-arm64.deb && dpkg -i pandoc-3.1.2-1-arm64.deb && rm pandoc-3.1.2-1-arm64.deb; fi'
+'if [[ "$(dpkg --print-architecture)" == "amd64" ]]; then cd /tmp && wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && dpkg -i ./google-chrome-stable_current_amd64.deb && rm ./google-chrome-stable_current_amd64.deb && wget -q https://github.com/jgm/pandoc/releases/download/3.1.4/pandoc-3.1.4-1-amd64.deb && dpkg -i pandoc-3.1.4-1-amd64.deb && rm pandoc-3.1.4-1-amd64.deb; elif [[ "$(dpkg --print-architecture)" == "arm64" ]]; then cd /tmp && wget -q https://github.com/jgm/pandoc/releases/download/3.1.4/pandoc-3.1.4-1-arm64.deb && dpkg -i pandoc-3.1.4-1-arm64.deb && rm pandoc-3.1.4-1-arm64.deb; fi'
 RUN DEBIAN_FRONTEND=noninteractive \
 cd /tmp \
 && wget -q -O google-fonts.tar.gz https://github.com/google/fonts/archive/main.tar.gz \
@@ -165,25 +166,13 @@ cd /tmp \
    /tmp/docassemble \
    /var/www/html/log \
    /var/www/nascent \
-   /var/www/node_modules/.bin \
 && chown -R www-data:www-data /var/www \
 && chown www-data:www-data /var/run/uwsgi \
 && chsh -s /bin/bash www-data \
-&& ln -s /var/www/node_modules/.bin/mmdc /usr/local/bin/mmdc \
 && curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 USER www-data
-RUN LC_CTYPE=C.UTF-8 LANG=C.UTF-8 \
-bash -c \
-"cd /tmp \
-&& echo '{ \"args\": [\"--no-sandbox\"] }' > ~/puppeteer-config.json \
-&& touch ~/.profile \
-&& curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash \
-&& cd ~ \
-&& export NVM_DIR=\"$HOME/.nvm\" \
-&& source ~/.profile \
-&& nvm install 18.15.0 \
-&& npm install mermaid.cli@0.5.1 \
-&& rm ~/.profile"
+RUN bash -c \
+"echo '{ \"args\": [\"--no-sandbox\"] }' > ~/puppeteer-config.json"
 USER root
 RUN bash -c "\
 if [[ \"$(dpkg --print-architecture)\" == \"arm64\" ]]; then \
