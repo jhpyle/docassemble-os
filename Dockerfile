@@ -136,7 +136,7 @@ uuid-dev \
 && npm install -g mermaid.cli@0.5.1
 RUN DEBIAN_FRONTEND=noninteractive \
 bash -c \
-'if [[ "$(dpkg --print-architecture)" == "amd64" ]]; then cd /tmp && wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && dpkg -i ./google-chrome-stable_current_amd64.deb && rm ./google-chrome-stable_current_amd64.deb && wget -q https://github.com/jgm/pandoc/releases/download/3.1.4/pandoc-3.1.4-1-amd64.deb && dpkg -i pandoc-3.1.4-1-amd64.deb && rm pandoc-3.1.4-1-amd64.deb; elif [[ "$(dpkg --print-architecture)" == "arm64" ]]; then cd /tmp && wget -q https://github.com/jgm/pandoc/releases/download/3.1.4/pandoc-3.1.4-1-arm64.deb && dpkg -i pandoc-3.1.4-1-arm64.deb && rm pandoc-3.1.4-1-arm64.deb; fi'
+'if [[ "$(dpkg --print-architecture)" == "amd64" ]]; then cd /tmp && wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && dpkg -i ./google-chrome-stable_current_amd64.deb && rm ./google-chrome-stable_current_amd64.deb && wget -q https://github.com/jgm/pandoc/releases/download/3.1.6/pandoc-3.1.6-1-amd64.deb && dpkg -i pandoc-3.1.6-1-amd64.deb && rm pandoc-3.1.6-1-amd64.deb; elif [[ "$(dpkg --print-architecture)" == "arm64" ]]; then cd /tmp && wget -q https://github.com/jgm/pandoc/releases/download/3.1.6/pandoc-3.1.6-1-arm64.deb && dpkg -i pandoc-3.1.6-1-arm64.deb && rm pandoc-3.1.6-1-arm64.deb; fi'
 RUN DEBIAN_FRONTEND=noninteractive \
 cd /tmp \
 && wget -q -O google-fonts.tar.gz https://github.com/google/fonts/archive/main.tar.gz \
