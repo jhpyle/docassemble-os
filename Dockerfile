@@ -133,7 +133,7 @@ uuid-dev \
 && curl -fsSL https://deb.nodesource.com/setup_18.x | bash \
 && apt-get install -y nodejs \
 && apt-get -y autoremove \
-&& npm install -g mermaid.cli@0.5.1
+&& npm install -g @mermaid-js/mermaid-cli
 RUN DEBIAN_FRONTEND=noninteractive \
 bash -c \
 'if [[ "$(dpkg --print-architecture)" == "amd64" ]]; then cd /tmp && wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && dpkg -i ./google-chrome-stable_current_amd64.deb && rm ./google-chrome-stable_current_amd64.deb && wget -q https://github.com/jgm/pandoc/releases/download/3.1.6/pandoc-3.1.6-1-amd64.deb && dpkg -i pandoc-3.1.6-1-amd64.deb && rm pandoc-3.1.6-1-amd64.deb; elif [[ "$(dpkg --print-architecture)" == "arm64" ]]; then cd /tmp && wget -q https://github.com/jgm/pandoc/releases/download/3.1.6/pandoc-3.1.6-1-arm64.deb && dpkg -i pandoc-3.1.6-1-arm64.deb && rm pandoc-3.1.6-1-arm64.deb; fi'
@@ -172,7 +172,7 @@ cd /tmp \
 && curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 USER www-data
 RUN bash -c \
-"echo '{ \"args\": [\"--no-sandbox\"] }' > ~/puppeteer-config.json"
+"echo '{ \"args\": [\"--no-sandbox\"], \"executablePath\": \"/usr/bin/google-chrome\" }' > ~/puppeteer-config.json"
 USER root
 RUN bash -c "\
 if [[ \"$(dpkg --print-architecture)\" == \"arm64\" ]]; then \
