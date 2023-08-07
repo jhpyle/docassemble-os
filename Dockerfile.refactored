@@ -1,0 +1,255 @@
+FROM ubuntu:22.04
+
+LABEL MAINTAINER="Jonathan Pyle <jhpyle@gmail.com>"
+
+# Change working directory
+WORKDIR /tmp
+
+# Environment Variables and Build VARs Used
+ARG LOCALE=en_US.UTF-8
+ENV DEBIAN_FRONTEND noninteractive
+ENV TERM xterm
+
+# Update container via apt.
+RUN apt-get update --fix-missing
+RUN apt-get install --yes apt-utils
+RUN apt-get --yes upgrade
+
+# Install Timezone.
+RUN ln --force --symbolic /usr/share/zoneinfo/America/New_York /etc/localtime
+RUN apt-get install --yes --no-install-recommends tzdata
+RUN dpkg-reconfigure --frontend=noninteractive tzdata
+
+# Set LOCALE
+RUN apt-get install --yes locales
+RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
+RUN locale-gen
+ENV LANGUAGE $LOCALE
+ENV LC_ALL $LOCALE
+ENV LANG $LOCALE
+
+# Install general APT packages
+RUN apt-get --quiet --yes install  \
+    language-pack-en \
+    wget \
+    unzip \
+    git \
+    locales \
+    s4cmd \
+    logrotate \
+    supervisor \
+    cron \
+    syslog-ng \
+    rsync \
+    curl \
+    dnsutils \
+    busybox \
+    tzdata \
+    uuid-dev
+
+# Install services
+RUN apt-get --quiet --yes install  \
+    nginx \
+    apache2 \
+    apache2-utils \
+    apache2-dev \
+    libapache2-mod-xsendfile \
+    postgresql \
+    redis-server \
+    rabbitmq-server \
+    unixodbc-dev
+
+# Install build tools
+RUN apt-get --quiet --yes install  \
+    gcc \
+    make \
+    autoconf \
+    automake \
+    build-essential
+
+# Install programming languages
+RUN apt-get --quiet --yes install  \
+    perl \
+    libinline-perl \
+    libparallel-forkmanager-perl \
+    npm \
+    python3-passlib \
+    python3-pip \
+    python3-venv \
+    gfortran
+
+# Install text and image manipulation tools
+RUN apt-get --quiet --yes install  \
+    imagemagick \
+    pdftk \
+    pacpl \
+    pandoc \
+    poppler-utils \
+    ffmpeg \
+    tesseract-ocr-all \
+    fonts-ebgaramond-extra \
+    ghostscript \
+    fonts-liberation \
+    cm-super \
+    qpdf \
+    wamerican \
+    libreoffice
+
+# Install various libraries
+RUN apt-get --quiet --yes install  \
+    libgdbm-dev \
+    libdb5.3-dev \
+    libbz2-dev \
+    libexpat1-dev \
+    liblzma-dev \
+    libffi-dev \
+    libaugeas0 \
+    zlib1g-dev \
+    libncurses5-dev \
+    libncursesw5-dev \
+    libreadline-dev \
+    libsqlite3-dev \
+    liblapack-dev \
+    libblas-dev \
+    libjpeg-dev \
+    libpq-dev \
+    libxml2 \
+    libxslt1.1 \
+    libu2f-udev \
+    libvulkan1 \
+    libxml2-dev \
+    libxslt1-dev \
+    libcurl4-openssl-dev \
+    libssl-dev \
+    libtool \
+    libtool-bin \
+    libsvm3 \
+    libsvm-dev \
+    liblinear4 \
+    liblinear-dev \
+    libzbar-dev \
+    libzbar0 \
+    libgs-dev \
+    default-libmysqlclient-dev \
+    libgmp-dev \
+    libsasl2-dev \
+    libldap2-dev \
+    exim4-daemon-heavy \
+    libaudio-flac-header-perl \
+    libaudio-musepack-perl \
+    libmp3-tag-perl \
+    libogg-vorbis-header-pureperl-perl \
+    libvorbis-dev \
+    libcddb-perl \
+    libcddb-get-perl \
+    libmp3-tag-perl \
+    libaudio-scan-perl \
+    libaudio-flac-header-perl \
+    libtesseract-dev
+
+# This installs correctly if done before the rext of the texlive installs.
+RUN apt-get --quiet --yes install texlive-latex-extra
+
+# Installing Tex stuff
+RUN apt-get --quiet --yes install \
+    texlive \
+    texlive-xetex \
+    texlive-latex-recommended \
+    texlive-luatex \
+    texlive-latex-extra \
+    texlive-font-utils \
+    texlive-lang-cyrillic \
+    texlive-lang-french \
+    texlive-lang-italian \
+    texlive-lang-portuguese \
+    texlive-lang-german \
+    texlive-lang-european \
+    texlive-lang-spanish
+
+# Remove unwanted packages
+RUN apt-get --yes remove \
+    libreoffice-report-builder \
+    nodejs \
+    nodejs-doc
+RUN apt-get --yes autoremove
+
+# Setup MS Core Fonts
+RUN echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | debconf-set-selections
+RUN apt-get --quiet --yes install ttf-mscorefonts-installer
+
+# Install Node
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash
+RUN apt-get --quiet --yes install nodejs
+
+# Install needed Node packages
+RUN npm install --global @mermaid-js/mermaid-cli
+
+# Install Chrome and Pandoc
+RUN bash -c \
+    'if [[ "$(dpkg --print-architecture)" == "amd64" ]]; then \
+        wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb; \
+        dpkg -i ./google-chrome-stable_current_amd64.deb; \
+        rm ./google-chrome-stable_current_amd64.deb; \
+        wget -q https://github.com/jgm/pandoc/releases/download/3.1.6/pandoc-3.1.6-1-amd64.deb; \
+        dpkg -i pandoc-3.1.6-1-amd64.deb; \
+        rm pandoc-3.1.6-1-amd64.deb; \
+    elif [[ "$(dpkg --print-architecture)" == "arm64" ]]; then \
+        wget -q https://github.com/jgm/pandoc/releases/download/3.1.6/pandoc-3.1.6-1-arm64.deb; \
+        dpkg -i pandoc-3.1.6-1-arm64.deb; \
+        rm pandoc-3.1.6-1-arm64.deb; \
+    fi'
+
+# Install Google Fonts
+RUN wget -q -O google-fonts.tar.gz https://github.com/google/fonts/archive/main.tar.gz
+RUN tar -zxf google-fonts.tar.gz
+RUN rm google-fonts.tar.gz
+RUN mkdir -p /usr/share/fonts/truetype/google-fonts
+RUN find ./fonts-main/ -name "*.ttf" -exec install -m644 {} /usr/share/fonts/truetype/google-fonts/ \;
+RUN rm -r ./fonts-main
+RUN sed -i 's/<policy domain="coder" rights="none" pattern="PDF" \/>/<policy domain="coder" rights="read | write" pattern="PDF" \/>/' /etc/ImageMagick-6/policy.xml
+RUN sed -i 's/^#PATH/PATH/' /etc/crontab
+
+# Build docassemble file structure
+RUN mkdir -p \
+    /etc/ssl/docassemble \
+    /usr/share/docassemble/local3.10 \
+    /usr/share/docassemble/certs \
+    /usr/share/docassemble/backup \
+    /usr/share/docassemble/config \
+    /usr/share/docassemble/webapp \
+    /usr/share/docassemble/files \
+    /usr/share/docassemble/cron \
+    /usr/share/docassemble/syslogng \
+    /var/www/.pip \
+    /var/www/.cache \
+    /var/run/uwsgi \
+    /var/run/docassemble \
+    /usr/share/docassemble/log \
+    /tmp/docassemble \
+    /var/www/html/log \
+    /var/www/nascent
+
+# Install AzureCLI
+RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
+
+# Update puppeteer-config.json
+RUN echo '{ "args": ["--no-sandbox"], "executablePath": "/usr/bin/google-chrome" }' > ~/puppeteer-config.json
+
+# Setup directory ownerships
+RUN chown -R www-data:www-data /var/www
+RUN chown www-data:www-data /var/run/uwsgi
+RUN chown www-data:www-data ~/puppeteer-config.json
+
+# Do some postgresql modifications
+RUN bash -c \
+    "if [[ \"$(dpkg --print-architecture)\" == \"arm64\" ]]; then \
+        sed -i \"s/scram-sha-256$/md5/\" /etc/postgresql/14/main/pg_hba.conf; \
+        echo \"password_encryption = md5\" >> /etc/postgresql/14/main/postgresql.conf; \
+        echo \"host   all   all  0.0.0.0/0   md5\" >> /etc/postgresql/14/main/pg_hba.conf; \
+    else \
+        echo \"host   all   all  0.0.0.0/0   scram-sha-256\" >> /etc/postgresql/14/main/pg_hba.conf; \
+    fi; \
+    echo \"listen_addresses = '*'\" >> /etc/postgresql/14/main/postgresql.conf"
+
+# Change working directory
+WORKDIR /
