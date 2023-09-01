@@ -154,6 +154,10 @@ uuid-dev \
 && curl -fsSL https://deb.nodesource.com/setup_18.x | bash \
 && apt-get install -y nodejs \
 && apt-get -y autoremove \
+# These lines for pdftk-java can be removed once on 22.10 or higher
+&& curl http://ftp.us.debian.org/debian/pool/main/p/pdftk-java/pdftk-java_3.3.3-1_all.deb --output pdftk-java.deb \
+&& dpkg -i pdftk-java.deb \
+&& rm pdftk-java.deb \
 && npm install -g @mermaid-js/mermaid-cli
 RUN DEBIAN_FRONTEND=noninteractive TERM=xterm \
 bash -c \
