@@ -101,6 +101,27 @@ libtesseract-dev \
 fonts-ebgaramond-extra \
 ghostscript \
 fonts-liberation \
+fonts-noto \
+fonts-noto-core \
+fonts-noto-extra \
+fonts-indic \
+fonts-deva \
+fonts-gujr \
+fonts-guru \
+fonts-deva-extra \
+fonts-gujr-extra \
+fonts-guru-extra \
+fonts-lato \
+fonts-liberation2 \
+fonts-knda \
+fonts-mlym \
+fonts-orya \
+fonts-smc \
+fonts-taml \
+fonts-telu \
+fonts-telu-extra \
+fonts-samyak \
+fonts-arkpandora \
 cm-super \
 qpdf \
 wamerican \
@@ -136,7 +157,7 @@ uuid-dev \
 && npm install -g @mermaid-js/mermaid-cli
 RUN DEBIAN_FRONTEND=noninteractive TERM=xterm \
 bash -c \
-'if [[ "$(dpkg --print-architecture)" == "amd64" ]]; then cd /tmp && wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && dpkg -i ./google-chrome-stable_current_amd64.deb && rm ./google-chrome-stable_current_amd64.deb && wget -q https://github.com/jgm/pandoc/releases/download/3.1.6.1/pandoc-3.1.6.1-1-amd64.deb && dpkg -i pandoc-3.1.6.1-1-amd64.deb && rm pandoc-3.1.6.1-1-amd64.deb; elif [[ "$(dpkg --print-architecture)" == "arm64" ]]; then cd /tmp && wget -q https://github.com/jgm/pandoc/releases/download/3.1.6.1/pandoc-3.1.6.1-1-arm64.deb && dpkg -i pandoc-3.1.6.1-1-arm64.deb && rm pandoc-3.1.6.1-1-arm64.deb; fi'
+'if [[ "$(dpkg --print-architecture)" == "amd64" ]]; then cd /tmp && wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && dpkg -i ./google-chrome-stable_current_amd64.deb && rm ./google-chrome-stable_current_amd64.deb && wget -q https://github.com/jgm/pandoc/releases/download/3.1.7/pandoc-3.1.7-1-amd64.deb && dpkg -i pandoc-3.1.7-1-amd64.deb && rm pandoc-3.1.7-1-amd64.deb; elif [[ "$(dpkg --print-architecture)" == "arm64" ]]; then cd /tmp && wget -q https://github.com/jgm/pandoc/releases/download/3.1.7/pandoc-3.1.7-1-arm64.deb && dpkg -i pandoc-3.1.7-1-arm64.deb && rm pandoc-3.1.7-1-arm64.deb; fi'
 RUN DEBIAN_FRONTEND=noninteractive TERM=xterm \
 cd /tmp \
 && wget -q -O google-fonts.tar.gz https://github.com/google/fonts/archive/main.tar.gz \
