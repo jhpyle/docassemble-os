@@ -146,6 +146,10 @@ libexpat1-dev \
 liblzma-dev \
 libffi-dev \
 uuid-dev \
+&& cd /tmp \
+&& wget http://mirrors.kernel.org/ubuntu/pool/universe/p/pdftk-java/pdftk-java_3.3.3-1_all.deb \
+&& dpkg -i pdftk-java_3.3.3-1_all.deb \
+&& rm pdftk-java_3.3.3-1_all.deb \
 && apt-get -y remove libreoffice-report-builder \
 && apt-get -q -y install ttf-mscorefonts-installer \
 && apt-get -q -y remove nodejs \
@@ -154,14 +158,10 @@ uuid-dev \
 && curl -fsSL https://deb.nodesource.com/setup_18.x | bash \
 && apt-get install -y nodejs \
 && apt-get -y autoremove \
-# These lines for pdftk-java can be removed once on 22.10 or higher
-&& curl http://ftp.us.debian.org/debian/pool/main/p/pdftk-java/pdftk-java_3.3.3-1_all.deb --output pdftk-java.deb \
-&& dpkg -i pdftk-java.deb \
-&& rm pdftk-java.deb \
 && npm install -g @mermaid-js/mermaid-cli
 RUN DEBIAN_FRONTEND=noninteractive TERM=xterm \
 bash -c \
-'if [[ "$(dpkg --print-architecture)" == "amd64" ]]; then cd /tmp && wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && dpkg -i ./google-chrome-stable_current_amd64.deb && rm ./google-chrome-stable_current_amd64.deb && wget -q https://github.com/jgm/pandoc/releases/download/3.1.7/pandoc-3.1.7-1-amd64.deb && dpkg -i pandoc-3.1.7-1-amd64.deb && rm pandoc-3.1.7-1-amd64.deb; elif [[ "$(dpkg --print-architecture)" == "arm64" ]]; then cd /tmp && wget -q https://github.com/jgm/pandoc/releases/download/3.1.7/pandoc-3.1.7-1-arm64.deb && dpkg -i pandoc-3.1.7-1-arm64.deb && rm pandoc-3.1.7-1-arm64.deb; fi'
+'cd /tmp && if [[ "$(dpkg --print-architecture)" == "amd64" ]]; then wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && dpkg -i ./google-chrome-stable_current_amd64.deb && rm ./google-chrome-stable_current_amd64.deb && wget -q https://github.com/jgm/pandoc/releases/download/3.1.7/pandoc-3.1.7-1-amd64.deb && dpkg -i pandoc-3.1.7-1-amd64.deb && rm pandoc-3.1.7-1-amd64.deb; elif [[ "$(dpkg --print-architecture)" == "arm64" ]]; then wget -q https://github.com/jgm/pandoc/releases/download/3.1.7/pandoc-3.1.7-1-arm64.deb && dpkg -i pandoc-3.1.7-1-arm64.deb && rm pandoc-3.1.7-1-arm64.deb; fi'
 RUN DEBIAN_FRONTEND=noninteractive TERM=xterm \
 cd /tmp \
 && wget -q -O google-fonts.tar.gz https://github.com/google/fonts/archive/main.tar.gz \
