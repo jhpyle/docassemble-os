@@ -155,7 +155,7 @@ uuid-dev \
 && apt-get -q -y remove nodejs \
 && apt-get -q -y remove nodejs-doc \
 && apt-get -q -y autoremove \
-&& curl -fsSL https://deb.nodesource.com/setup_18.x | bash \
+&& curl -fsSL https://deb.nodesource.com/setup_22.x | bash \
 && apt-get install -y nodejs \
 && apt-get -y autoremove \
 && npm install -g @mermaid-js/mermaid-cli
@@ -195,7 +195,13 @@ cd /tmp \
 && chown -R www-data:www-data /var/www \
 && chown www-data:www-data /var/run/uwsgi \
 && chsh -s /bin/bash www-data \
-&& curl -sL https://aka.ms/InstallAzureCLIDeb | bash
+&& curl -sL https://aka.ms/InstallAzureCLIDeb | bash \
+&& wget https://www.python.org/ftp/python/3.10.6/Python-3.10.6.tgz \
+&& tar xzf Python-3.10.6.tgz \
+&& cd Python-3.10.6 \
+&& ./configure --enable-optimizations --enable-shared --prefix=/usr \
+&& make \
+&& make altinstall
 USER www-data
 RUN bash -c \
 "echo '{ \"args\": [\"--no-sandbox\"], \"executablePath\": \"/usr/bin/google-chrome\" }' > ~/puppeteer-config.json"
