@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM ubuntu:24.04
 RUN DEBIAN_FRONTEND=noninteractive TERM=xterm \
 apt-get -y update \
 && apt-get -y upgrade
@@ -147,9 +147,9 @@ liblzma-dev \
 libffi-dev \
 uuid-dev \
 && cd /tmp \
-&& wget http://mirrors.kernel.org/ubuntu/pool/universe/p/pdftk-java/pdftk-java_3.3.3-1_all.deb \
-&& dpkg -i pdftk-java_3.3.3-1_all.deb \
-&& rm pdftk-java_3.3.3-1_all.deb \
+&& wget http://mirrors.kernel.org/ubuntu/pool/universe/p/pdftk-java/pdftk-java_3.3.3-2_all.deb \
+&& dpkg -i pdftk-java_3.3.3-2_all.deb \
+&& rm pdftk-java_3.3.3-2_all.deb \
 && apt-get -y remove libreoffice-report-builder \
 && apt-get -q -y install ttf-mscorefonts-installer \
 && apt-get -q -y remove nodejs \
@@ -202,11 +202,11 @@ RUN bash -c \
 USER root
 RUN bash -c "\
 if [[ \"$(dpkg --print-architecture)\" == \"arm64\" ]]; then \
-  sed -i \"s/scram-sha-256$/md5/\" /etc/postgresql/14/main/pg_hba.conf \
-  && echo \"password_encryption = md5\" >> /etc/postgresql/14/main/postgresql.conf; \
-  echo \"host   all   all  0.0.0.0/0   md5\" >> /etc/postgresql/14/main/pg_hba.conf; \
+  sed -i \"s/scram-sha-256$/md5/\" /etc/postgresql/16/main/pg_hba.conf \
+  && echo \"password_encryption = md5\" >> /etc/postgresql/16/main/postgresql.conf; \
+  echo \"host   all   all  0.0.0.0/0   md5\" >> /etc/postgresql/16/main/pg_hba.conf; \
 else \
-  echo \"host   all   all  0.0.0.0/0   scram-sha-256\" >> /etc/postgresql/14/main/pg_hba.conf; \
+  echo \"host   all   all  0.0.0.0/0   scram-sha-256\" >> /etc/postgresql/16/main/pg_hba.conf; \
 fi; \
-echo \"listen_addresses = '*'\" >> /etc/postgresql/14/main/postgresql.conf"
+echo \"listen_addresses = '*'\" >> /etc/postgresql/16/main/postgresql.conf"
 CMD ["bash"]
