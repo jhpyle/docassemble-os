@@ -76,13 +76,8 @@ texlive-xetex \
 texlive-latex-recommended \
 texlive-latex-extra \
 texlive-font-utils \
-texlive-lang-cyrillic \
-texlive-lang-french \
-texlive-lang-italian \
-texlive-lang-portuguese \
-texlive-lang-german \
-texlive-lang-european \
-texlive-lang-spanish \
+texlive-fonts-extra \
+texlive-lang-all \
 texlive-extra-utils \
 poppler-utils \
 libaudio-flac-header-perl \
