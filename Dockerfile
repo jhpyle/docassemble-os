@@ -151,7 +151,7 @@ uuid-dev \
 && apt-get -q -y remove nodejs \
 && apt-get -q -y remove nodejs-doc \
 && apt-get -q -y autoremove \
-&& curl -fsSL https://deb.nodesource.com/setup_22.x | bash \
+&& curl -fsSL https://deb.nodesource.com/setup_23.x | bash \
 && apt-get install -y nodejs \
 && apt-get -y autoremove \
 && npm install -g @mermaid-js/mermaid-cli
