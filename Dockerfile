@@ -157,7 +157,7 @@ uuid-dev \
 && npm install -g @mermaid-js/mermaid-cli
 RUN DEBIAN_FRONTEND=noninteractive TERM=xterm \
 bash -c \
-'cd /tmp && if [[ "$(dpkg --print-architecture)" == "amd64" ]]; then wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && dpkg -i ./google-chrome-stable_current_amd64.deb && rm ./google-chrome-stable_current_amd64.deb && wget -q https://github.com/jgm/pandoc/releases/download/3.5/pandoc-3.5-1-amd64.deb && dpkg -i pandoc-3.5-1-amd64.deb && rm pandoc-3.5-1-amd64.deb; elif [[ "$(dpkg --print-architecture)" == "arm64" ]]; then wget -q https://github.com/jgm/pandoc/releases/download/3.5/pandoc-3.5-1-arm64.deb && dpkg -i pandoc-3.5-1-arm64.deb && rm pandoc-3.5-1-arm64.deb; fi'
+'cd /tmp && if [[ "$(dpkg --print-architecture)" == "amd64" ]]; then wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && dpkg -i ./google-chrome-stable_current_amd64.deb && rm ./google-chrome-stable_current_amd64.deb && wget -q https://github.com/jgm/pandoc/releases/download/3.6.4/pandoc-3.6.4-1-amd64.deb && dpkg -i pandoc-3.6.4-1-amd64.deb && rm pandoc-3.6.4-1-amd64.deb; elif [[ "$(dpkg --print-architecture)" == "arm64" ]]; then wget -q https://github.com/jgm/pandoc/releases/download/3.6.4/pandoc-3.6.4-1-arm64.deb && dpkg -i pandoc-3.6.4-1-arm64.deb && rm pandoc-3.6.4-1-arm64.deb; fi'
 RUN DEBIAN_FRONTEND=noninteractive TERM=xterm \
 cd /tmp \
 && wget -q -O google-fonts.tar.gz https://github.com/google/fonts/archive/main.tar.gz \
@@ -172,7 +172,7 @@ cd /tmp \
 RUN DEBIAN_FRONTEND=noninteractive TERM=xterm \
 cd /tmp \
 && mkdir -p /etc/ssl/docassemble \
-   /usr/share/docassemble/local3.10 \
+   /usr/share/docassemble/local3.12 \
    /usr/share/docassemble/certs \
    /usr/share/docassemble/backup \
    /usr/share/docassemble/config \
@@ -191,13 +191,7 @@ cd /tmp \
 && chown -R www-data:www-data /var/www \
 && chown www-data:www-data /var/run/uwsgi \
 && chsh -s /bin/bash www-data \
-&& curl -sL https://aka.ms/InstallAzureCLIDeb | bash \
-&& wget https://www.python.org/ftp/python/3.10.6/Python-3.10.6.tgz \
-&& tar xzf Python-3.10.6.tgz \
-&& cd Python-3.10.6 \
-&& ./configure --enable-optimizations --enable-shared --prefix=/usr \
-&& make \
-&& make altinstall
+&& curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 USER www-data
 RUN bash -c \
 "echo '{ \"args\": [\"--no-sandbox\"], \"executablePath\": \"/usr/bin/google-chrome\" }' > ~/puppeteer-config.json"
