@@ -132,6 +132,7 @@ libblas-dev \
 gfortran \
 unixodbc-dev \
 libaugeas0 \
+libaugeas-dev \
 busybox
 RUN DEBIAN_FRONTEND=noninteractive TERM=xterm \
 apt-get -q -y install \
@@ -151,13 +152,13 @@ uuid-dev \
 && apt-get -q -y remove nodejs \
 && apt-get -q -y remove nodejs-doc \
 && apt-get -q -y autoremove \
-&& curl -fsSL https://deb.nodesource.com/setup_23.x | bash \
+&& curl -fsSL https://deb.nodesource.com/setup_current.x | bash \
 && apt-get install -y nodejs \
 && apt-get -y autoremove \
 && npm install -g @mermaid-js/mermaid-cli
 RUN DEBIAN_FRONTEND=noninteractive TERM=xterm \
 bash -c \
-'cd /tmp && if [[ "$(dpkg --print-architecture)" == "amd64" ]]; then wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && dpkg -i ./google-chrome-stable_current_amd64.deb && rm ./google-chrome-stable_current_amd64.deb && wget -q https://github.com/jgm/pandoc/releases/download/3.6.4/pandoc-3.6.4-1-amd64.deb && dpkg -i pandoc-3.6.4-1-amd64.deb && rm pandoc-3.6.4-1-amd64.deb; elif [[ "$(dpkg --print-architecture)" == "arm64" ]]; then wget -q https://github.com/jgm/pandoc/releases/download/3.6.4/pandoc-3.6.4-1-arm64.deb && dpkg -i pandoc-3.6.4-1-arm64.deb && rm pandoc-3.6.4-1-arm64.deb; fi'
+'cd /tmp && if [[ "$(dpkg --print-architecture)" == "amd64" ]]; then wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && dpkg -i ./google-chrome-stable_current_amd64.deb && rm ./google-chrome-stable_current_amd64.deb && wget -q https://github.com/jgm/pandoc/releases/download/3.7.0.2/pandoc-3.7.0.2-1-amd64.deb && dpkg -i pandoc-3.7.0.2-1-amd64.deb && rm pandoc-3.7.0.2-1-amd64.deb; elif [[ "$(dpkg --print-architecture)" == "arm64" ]]; then wget -q https://github.com/jgm/pandoc/releases/download/3.7.0.2/pandoc-3.7.0.2-1-arm64.deb && dpkg -i pandoc-3.7.0.2-1-arm64.deb && rm pandoc-3.7.0.2-1-arm64.deb; fi'
 RUN DEBIAN_FRONTEND=noninteractive TERM=xterm \
 cd /tmp \
 && wget -q -O google-fonts.tar.gz https://github.com/google/fonts/archive/main.tar.gz \
