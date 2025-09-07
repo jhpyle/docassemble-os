@@ -1,7 +1,10 @@
 FROM ubuntu:24.04
 RUN DEBIAN_FRONTEND=noninteractive TERM=xterm \
 apt-get -y update \
-&& apt-get -y upgrade
+&& apt-get -y upgrade \
+&& apt-get -y dist-upgrade  \
+&& apt-get -y autoremove \
+&& apt-get clean
 RUN DEBIAN_FRONTEND=noninteractive TERM=xterm \
 ln -snf /usr/share/zoneinfo/America/New_York /etc/localtime \
 && echo America/New_York > /etc/timezone \
@@ -51,6 +54,8 @@ rsync \
 curl \
 dnsutils \
 build-essential \
+fonts-liberation \
+fonts-dejavu-core \
 libsvm3 \
 libsvm-dev \
 liblinear4 \
@@ -76,7 +81,6 @@ texlive-xetex \
 texlive-latex-recommended \
 texlive-latex-extra \
 texlive-font-utils \
-texlive-fonts-extra \
 texlive-lang-all \
 texlive-extra-utils \
 poppler-utils \
@@ -94,31 +98,7 @@ ffmpeg \
 tesseract-ocr-all \
 libtesseract-dev \
 wkhtmltopdf \
-fonts-ebgaramond-extra \
 ghostscript \
-fonts-liberation \
-fonts-noto \
-fonts-noto-core \
-fonts-noto-extra \
-fonts-indic \
-fonts-deva \
-fonts-gujr \
-fonts-guru \
-fonts-deva-extra \
-fonts-gujr-extra \
-fonts-guru-extra \
-fonts-lato \
-fonts-liberation2 \
-fonts-knda \
-fonts-mlym \
-fonts-orya \
-fonts-smc \
-fonts-taml \
-fonts-telu \
-fonts-telu-extra \
-fonts-samyak \
-fonts-arkpandora \
-cm-super \
 qpdf \
 wamerican \
 libreoffice \
@@ -155,19 +135,13 @@ uuid-dev \
 && curl -fsSL https://deb.nodesource.com/setup_current.x | bash \
 && apt-get install -y nodejs \
 && apt-get -y autoremove \
+&& apt-get clean \
 && npm install -g @mermaid-js/mermaid-cli
 RUN DEBIAN_FRONTEND=noninteractive TERM=xterm \
 bash -c \
 'cd /tmp && if [[ "$(dpkg --print-architecture)" == "amd64" ]]; then wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && dpkg -i ./google-chrome-stable_current_amd64.deb && rm ./google-chrome-stable_current_amd64.deb && wget -q https://github.com/jgm/pandoc/releases/download/3.8/pandoc-3.8-1-amd64.deb && dpkg -i pandoc-3.8-1-amd64.deb && rm pandoc-3.8-1-amd64.deb; elif [[ "$(dpkg --print-architecture)" == "arm64" ]]; then wget -q https://github.com/jgm/pandoc/releases/download/3.8/pandoc-3.8-1-arm64.deb && dpkg -i pandoc-3.8-1-arm64.deb && rm pandoc-3.8-1-arm64.deb; fi'
 RUN DEBIAN_FRONTEND=noninteractive TERM=xterm \
 cd /tmp \
-&& wget -q -O google-fonts.tar.gz https://github.com/google/fonts/archive/main.tar.gz \
-&& tar -zxf google-fonts.tar.gz \
-&& rm google-fonts.tar.gz \
-&& mkdir -p /usr/share/fonts/truetype/google-fonts \
-&& find ./fonts-main/ -name "*.ttf" -exec install -m644 {} /usr/share/fonts/truetype/google-fonts/ \; \
-&& rm -r ./fonts-main \
-&& fc-cache -f -v \
 && sed -i 's/<policy domain="coder" rights="none" pattern="PDF" \/>/<policy domain="coder" rights="read | write" pattern="PDF" \/>/' /etc/ImageMagick-6/policy.xml \
 && sed -i 's/^#PATH/PATH/' /etc/crontab
 RUN DEBIAN_FRONTEND=noninteractive TERM=xterm \
@@ -206,4 +180,5 @@ else \
   echo \"host   all   all  0.0.0.0/0   scram-sha-256\" >> /etc/postgresql/16/main/pg_hba.conf; \
 fi; \
 echo \"listen_addresses = '*'\" >> /etc/postgresql/16/main/postgresql.conf"
+USER ubuntu
 CMD ["bash"]
