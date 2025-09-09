@@ -166,6 +166,9 @@ cd /tmp \
 && chown -R www-data:www-data /var/www \
 && chown www-data:www-data /var/run/uwsgi \
 && chsh -s /bin/bash www-data \
+&& echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen \
+&& locale-gen \
+&& update-locale \
 && curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 USER www-data
 RUN bash -c \
