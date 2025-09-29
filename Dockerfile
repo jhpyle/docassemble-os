@@ -1,10 +1,10 @@
 FROM ubuntu:24.04
 RUN DEBIAN_FRONTEND=noninteractive TERM=xterm \
-apt-get -y update \
-&& apt-get -y upgrade \
-&& apt-get -y dist-upgrade  \
-&& apt-get -y autoremove \
-&& apt-get clean
+apt-get -q -y update \
+&& apt-get -q -y upgrade \
+&& apt-get -q -y dist-upgrade  \
+&& apt-get -q -y autoremove \
+&& apt-get -q clean
 RUN DEBIAN_FRONTEND=noninteractive TERM=xterm \
 ln -snf /usr/share/zoneinfo/America/New_York /etc/localtime \
 && echo America/New_York > /etc/timezone \
@@ -68,6 +68,7 @@ libgmp-dev \
 python3-passlib \
 python3-pip \
 python3-venv \
+python3-dev \
 libsasl2-dev \
 libldap2-dev \
 exim4-daemon-heavy \
@@ -113,7 +114,8 @@ gfortran \
 unixodbc-dev \
 libaugeas0 \
 libaugeas-dev \
-busybox
+busybox \
+libdbus-1-dev
 RUN DEBIAN_FRONTEND=noninteractive TERM=xterm \
 apt-get -q -y install \
 libgdbm-dev \
@@ -124,24 +126,35 @@ liblzma-dev \
 libffi-dev \
 uuid-dev \
 && cd /tmp \
-&& wget http://mirrors.kernel.org/ubuntu/pool/universe/p/pdftk-java/pdftk-java_3.3.3-2_all.deb \
-&& dpkg -i pdftk-java_3.3.3-2_all.deb \
-&& rm pdftk-java_3.3.3-2_all.deb \
-&& apt-get -y remove libreoffice-report-builder \
+&& apt-get -q -y remove libreoffice-report-builder \
 && apt-get -q -y install ttf-mscorefonts-installer \
 && apt-get -q -y remove nodejs \
 && apt-get -q -y remove nodejs-doc \
 && apt-get -q -y autoremove \
 && curl -fsSL https://deb.nodesource.com/setup_current.x | bash \
-&& apt-get install -y nodejs \
-&& apt-get -y autoremove \
-&& apt-get clean \
-&& npm install -g @mermaid-js/mermaid-cli
+&& apt-get -q -y install nodejs \
+&& apt-get -q -y autoremove \
+&& apt-get -q clean \
+&& npm install -g @mermaid-js/mermaid-cli \
+&& rm -rf /usr/lib/python3/dist-packages/setuptools-*.dist-info/ \
+&& rm -rf /usr/lib/python3/dist-packages/certifi-*.dist-info/ \
+&& rm -rf /usr/lib/python3/dist-packages/cryptography-*.dist-info/ \
+&& rm -rf /usr/lib/python3/dist-packages/idna-*.dist-info/ \
+&& rm -rf /usr/lib/python3/dist-packages/urllib3-*.dist-info/ \
+&& rm -rf /usr/lib/python3/dist-packages/requests-*.dist-info/ \
+&& pip3 install --upgrade --force-reinstall --break-system-packages \
+     setuptools \
+     certifi \
+     cryptography \
+     idna \
+     urllib3 \
+     requests
 RUN DEBIAN_FRONTEND=noninteractive TERM=xterm \
 bash -c \
 'cd /tmp && if [[ "$(dpkg --print-architecture)" == "amd64" ]]; then wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && dpkg -i ./google-chrome-stable_current_amd64.deb && rm ./google-chrome-stable_current_amd64.deb && wget -q https://github.com/jgm/pandoc/releases/download/3.8/pandoc-3.8-1-amd64.deb && dpkg -i pandoc-3.8-1-amd64.deb && rm pandoc-3.8-1-amd64.deb; elif [[ "$(dpkg --print-architecture)" == "arm64" ]]; then wget -q https://github.com/jgm/pandoc/releases/download/3.8/pandoc-3.8-1-arm64.deb && dpkg -i pandoc-3.8-1-arm64.deb && rm pandoc-3.8-1-arm64.deb; fi'
 RUN DEBIAN_FRONTEND=noninteractive TERM=xterm \
 cd /tmp \
+&& apt-get -q -y autoremove \
 && sed -i 's/<policy domain="coder" rights="none" pattern="PDF" \/>/<policy domain="coder" rights="read | write" pattern="PDF" \/>/' /etc/ImageMagick-6/policy.xml \
 && sed -i 's/^#PATH/PATH/' /etc/crontab
 RUN DEBIAN_FRONTEND=noninteractive TERM=xterm \
