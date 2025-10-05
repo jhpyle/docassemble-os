@@ -136,22 +136,10 @@ uuid-dev \
 && apt-get -q -y autoremove \
 && apt-get -q clean \
 && npm install -g @mermaid-js/mermaid-cli \
-&& rm -rf /usr/lib/python3/dist-packages/setuptools-*.dist-info/ \
-&& rm -rf /usr/lib/python3/dist-packages/certifi-*.dist-info/ \
-&& rm -rf /usr/lib/python3/dist-packages/cryptography-*.dist-info/ \
-&& rm -rf /usr/lib/python3/dist-packages/idna-*.dist-info/ \
-&& rm -rf /usr/lib/python3/dist-packages/urllib3-*.dist-info/ \
-&& rm -rf /usr/lib/python3/dist-packages/requests-*.dist-info/ \
-&& pip3 install --upgrade --force-reinstall --break-system-packages \
-     setuptools \
-     certifi \
-     cryptography \
-     idna \
-     urllib3 \
-     requests
+&& curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 RUN DEBIAN_FRONTEND=noninteractive TERM=xterm \
 bash -c \
-'cd /tmp && if [[ "$(dpkg --print-architecture)" == "amd64" ]]; then wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && dpkg -i ./google-chrome-stable_current_amd64.deb && rm ./google-chrome-stable_current_amd64.deb && wget -q https://github.com/jgm/pandoc/releases/download/3.8/pandoc-3.8-1-amd64.deb && dpkg -i pandoc-3.8-1-amd64.deb && rm pandoc-3.8-1-amd64.deb; elif [[ "$(dpkg --print-architecture)" == "arm64" ]]; then wget -q https://github.com/jgm/pandoc/releases/download/3.8/pandoc-3.8-1-arm64.deb && dpkg -i pandoc-3.8-1-arm64.deb && rm pandoc-3.8-1-arm64.deb; fi'
+'cd /tmp && if [[ "$(dpkg --print-architecture)" == "amd64" ]]; then wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && dpkg -i ./google-chrome-stable_current_amd64.deb && rm ./google-chrome-stable_current_amd64.deb && wget -q https://github.com/jgm/pandoc/releases/download/3.8.1/pandoc-3.8.1-1-amd64.deb && dpkg -i pandoc-3.8.1-1-amd64.deb && rm pandoc-3.8.1-1-amd64.deb; elif [[ "$(dpkg --print-architecture)" == "arm64" ]]; then wget -q https://github.com/jgm/pandoc/releases/download/3.8.1/pandoc-3.8.1-1-arm64.deb && dpkg -i pandoc-3.8.1-1-arm64.deb && rm pandoc-3.8.1-1-arm64.deb; fi'
 RUN DEBIAN_FRONTEND=noninteractive TERM=xterm \
 cd /tmp \
 && apt-get -q -y autoremove \
@@ -181,8 +169,7 @@ cd /tmp \
 && chsh -s /bin/bash www-data \
 && echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen \
 && locale-gen \
-&& update-locale \
-&& curl -sL https://aka.ms/InstallAzureCLIDeb | bash
+&& update-locale
 USER www-data
 RUN bash -c \
 "echo '{ \"args\": [\"--no-sandbox\"], \"executablePath\": \"/usr/bin/google-chrome\" }' > ~/puppeteer-config.json"
