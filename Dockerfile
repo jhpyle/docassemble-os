@@ -139,7 +139,7 @@ uuid-dev \
 && curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 RUN DEBIAN_FRONTEND=noninteractive TERM=xterm \
 bash -c \
-'cd /tmp && if [[ "$(dpkg --print-architecture)" == "amd64" ]]; then wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && dpkg -i ./google-chrome-stable_current_amd64.deb && rm ./google-chrome-stable_current_amd64.deb && wget -q https://github.com/jgm/pandoc/releases/download/3.8.1/pandoc-3.8.1-1-amd64.deb && dpkg -i pandoc-3.8.1-1-amd64.deb && rm pandoc-3.8.1-1-amd64.deb; elif [[ "$(dpkg --print-architecture)" == "arm64" ]]; then wget -q https://github.com/jgm/pandoc/releases/download/3.8.1/pandoc-3.8.1-1-arm64.deb && dpkg -i pandoc-3.8.1-1-arm64.deb && rm pandoc-3.8.1-1-arm64.deb; fi'
+'cd /tmp && if [[ "$(dpkg --print-architecture)" == "amd64" ]]; then wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && dpkg -i ./google-chrome-stable_current_amd64.deb && rm ./google-chrome-stable_current_amd64.deb && wget -q https://github.com/jgm/pandoc/releases/download/3.8.2/pandoc-3.8.2-1-amd64.deb && dpkg -i pandoc-3.8.2-1-amd64.deb && rm pandoc-3.8.2-1-amd64.deb; elif [[ "$(dpkg --print-architecture)" == "arm64" ]]; then wget -q https://github.com/jgm/pandoc/releases/download/3.8.2/pandoc-3.8.2-1-arm64.deb && dpkg -i pandoc-3.8.2-1-arm64.deb && rm pandoc-3.8.2-1-arm64.deb; fi'
 RUN DEBIAN_FRONTEND=noninteractive TERM=xterm \
 cd /tmp \
 && apt-get -q -y autoremove \
