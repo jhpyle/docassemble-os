@@ -68,6 +68,7 @@ python3-passlib \
 python3-pip \
 python3-venv \
 python3-dev \
+python3-scipy \
 libsasl2-dev \
 libldap2-dev \
 exim4-daemon-heavy \
