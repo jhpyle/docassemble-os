@@ -1,4 +1,4 @@
-FROM ubuntu:24.04
+FROM ubuntu:26.04
 RUN DEBIAN_FRONTEND=noninteractive TERM=xterm \
 apt-get -q -y update \
 && apt-get -q -y upgrade \
@@ -37,9 +37,8 @@ libpq-dev \
 logrotate \
 npm \
 cron \
-libxml2 \
+libxml2-16 \
 libxslt1.1 \
-libu2f-udev \
 libvulkan1 \
 libxml2-dev \
 libxslt1-dev \
@@ -98,7 +97,6 @@ libaudio-flac-header-perl \
 ffmpeg \
 tesseract-ocr-all \
 libtesseract-dev \
-wkhtmltopdf \
 ghostscript \
 qpdf \
 wamerican \
@@ -115,7 +113,9 @@ unixodbc-dev \
 libaugeas0 \
 libaugeas-dev \
 busybox \
-libdbus-1-dev
+libdbus-1-dev \
+libopenblas-dev \
+pkg-config
 RUN DEBIAN_FRONTEND=noninteractive TERM=xterm \
 apt-get -q -y install \
 libgdbm-dev \
@@ -143,12 +143,12 @@ bash -c \
 RUN DEBIAN_FRONTEND=noninteractive TERM=xterm \
 cd /tmp \
 && apt-get -q -y autoremove \
-&& sed -i 's/<policy domain="coder" rights="none" pattern="PDF" \/>/<policy domain="coder" rights="read | write" pattern="PDF" \/>/' /etc/ImageMagick-6/policy.xml \
+&& sed -i 's|</policymap>|  <policy domain="coder" rights="read \| write" pattern="PDF" />\n</policymap>|' /etc/ImageMagick-7/policy.xml \
 && sed -i 's/^#PATH/PATH/' /etc/crontab
 RUN DEBIAN_FRONTEND=noninteractive TERM=xterm \
 cd /tmp \
 && mkdir -p /etc/ssl/docassemble \
-   /usr/share/docassemble/local3.12 \
+   /usr/share/docassemble/local3.14 \
    /usr/share/docassemble/certs \
    /usr/share/docassemble/backup \
    /usr/share/docassemble/config \
@@ -176,12 +176,12 @@ RUN bash -c \
 USER root
 RUN bash -c "\
 if [[ \"$(dpkg --print-architecture)\" == \"arm64\" ]]; then \
-  sed -i \"s/scram-sha-256$/md5/\" /etc/postgresql/16/main/pg_hba.conf \
-  && echo \"password_encryption = md5\" >> /etc/postgresql/16/main/postgresql.conf; \
-  echo \"host   all   all  0.0.0.0/0   md5\" >> /etc/postgresql/16/main/pg_hba.conf; \
+  sed -i \"s/scram-sha-256$/md5/\" /etc/postgresql/18/main/pg_hba.conf \
+  && echo \"password_encryption = md5\" >> /etc/postgresql/18/main/postgresql.conf; \
+  echo \"host   all   all  0.0.0.0/0   md5\" >> /etc/postgresql/18/main/pg_hba.conf; \
 else \
-  echo \"host   all   all  0.0.0.0/0   scram-sha-256\" >> /etc/postgresql/16/main/pg_hba.conf; \
+  echo \"host   all   all  0.0.0.0/0   scram-sha-256\" >> /etc/postgresql/18/main/pg_hba.conf; \
 fi; \
-echo \"listen_addresses = '*'\" >> /etc/postgresql/16/main/postgresql.conf"
+echo \"listen_addresses = '*'\" >> /etc/postgresql/18/main/postgresql.conf"
 USER ubuntu
 CMD ["bash"]
