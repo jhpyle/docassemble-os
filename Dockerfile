@@ -116,7 +116,11 @@ libaugeas-dev \
 busybox \
 libdbus-1-dev \
 libopenblas-dev \
-pkg-config
+pkg-config \
+cmake \
+ninja-build \
+meson \
+libhighs-dev
 RUN DEBIAN_FRONTEND=noninteractive TERM=xterm \
 apt-get -q -y install \
 libgdbm-dev \
