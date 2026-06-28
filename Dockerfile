@@ -1,16 +1,16 @@
 FROM ubuntu:26.04
 RUN DEBIAN_FRONTEND=noninteractive TERM=xterm \
-apt-get -q -y update \
-&& apt-get -q -y upgrade \
-&& apt-get -q -y dist-upgrade  \
+apt-get -q -y -o Acquire::Retries=3 update \
+&& apt-get -q -y -o Acquire::Retries=3 upgrade \
+&& apt-get -q -y -o Acquire::Retries=3 dist-upgrade  \
 && apt-get -q -y autoremove \
 && apt-get -q clean
 RUN DEBIAN_FRONTEND=noninteractive TERM=xterm \
 ln -snf /usr/share/zoneinfo/America/New_York /etc/localtime \
 && echo America/New_York > /etc/timezone \
 && echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | debconf-set-selections \
-&& apt-get -q -y install language-pack-en \
-&& apt-get -q -y install \
+&& apt-get -q -y -o Acquire::Retries=3 install language-pack-en \
+&& apt-get -q -y -o Acquire::Retries=3 install \
 apt-utils \
 tzdata \
 wget \
@@ -122,7 +122,7 @@ ninja-build \
 meson \
 libhighs-dev
 RUN DEBIAN_FRONTEND=noninteractive TERM=xterm \
-apt-get -q -y install \
+apt-get -q -y -o Acquire::Retries=3 install \
 libgdbm-dev \
 libdb5.3-dev \
 libbz2-dev \
@@ -132,12 +132,12 @@ libffi-dev \
 uuid-dev \
 && cd /tmp \
 && apt-get -q -y remove libreoffice-report-builder \
-&& apt-get -q -y install ttf-mscorefonts-installer \
+&& apt-get -q -y install -o Acquire::Retries=3 ttf-mscorefonts-installer \
 && apt-get -q -y remove nodejs \
 && apt-get -q -y remove nodejs-doc \
 && apt-get -q -y autoremove \
 && curl -fsSL https://deb.nodesource.com/setup_current.x | bash \
-&& apt-get -q -y install nodejs \
+&& apt-get -q -y -o Acquire::Retries=3 install nodejs \
 && apt-get -q -y autoremove \
 && apt-get -q clean \
 && npm install -g @mermaid-js/mermaid-cli \
