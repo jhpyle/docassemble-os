@@ -1,4 +1,6 @@
 FROM ubuntu:26.04
+USER root
+COPY . /tmp/docassemble/
 RUN DEBIAN_FRONTEND=noninteractive TERM=xterm \
 apt-get -q -y -o Acquire::Retries=3 update \
 && apt-get -q -y -o Acquire::Retries=3 upgrade \
@@ -130,9 +132,12 @@ libexpat1-dev \
 liblzma-dev \
 libffi-dev \
 uuid-dev \
+whiptail \
 && cd /tmp \
 && apt-get -q -y remove libreoffice-report-builder \
-&& apt-get -q -y install -o Acquire::Retries=3 ttf-mscorefonts-installer \
+&& wget https://github.com/relvinarsenio/ttf-mscorefonts-installer/releases/download/release-uw11/ttf-mscorefonts-installer_uw11_all.deb \
+&& dpkg -i ttf-mscorefonts-installer_uw11_all.deb \
+&& rm ttf-mscorefonts-installer_uw11_all.deb \
 && apt-get -q -y remove nodejs \
 && apt-get -q -y remove nodejs-doc \
 && apt-get -q -y autoremove \
@@ -144,7 +149,7 @@ uuid-dev \
 && curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 RUN DEBIAN_FRONTEND=noninteractive TERM=xterm \
 bash -c \
-'cd /tmp && if [[ "$(dpkg --print-architecture)" == "amd64" ]]; then wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && dpkg -i ./google-chrome-stable_current_amd64.deb && rm ./google-chrome-stable_current_amd64.deb && wget -q https://github.com/jgm/pandoc/releases/download/3.9.0.2/pandoc-3.9.0.2-1-amd64.deb && dpkg -i pandoc-3.9.0.2-1-amd64.deb && rm pandoc-3.9.0.2-1-amd64.deb; elif [[ "$(dpkg --print-architecture)" == "arm64" ]]; then wget -q https://github.com/jgm/pandoc/releases/download/3.9.0.2/pandoc-3.9.0.2-1-arm64.deb && dpkg -i pandoc-3.9.0.2-1-arm64.deb && rm pandoc-3.9.0.2-1-arm64.deb; fi'
+'cd /tmp && if [[ "$(dpkg --print-architecture)" == "amd64" ]]; then wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && dpkg -i ./google-chrome-stable_current_amd64.deb && rm ./google-chrome-stable_current_amd64.deb && wget -q https://github.com/jgm/pandoc/releases/download/3.10.1/pandoc-3.10.1-1-amd64.deb && dpkg -i pandoc-3.10.1-1-amd64.deb && rm pandoc-3.10.1-1-amd64.deb; elif [[ "$(dpkg --print-architecture)" == "arm64" ]]; then wget -q https://github.com/jgm/pandoc/releases/download/3.10.1/pandoc-3.10.1-1-arm64.deb && dpkg -i pandoc-3.10.1-1-arm64.deb && rm pandoc-3.10.1-1-arm64.deb; fi'
 RUN DEBIAN_FRONTEND=noninteractive TERM=xterm \
 cd /tmp \
 && apt-get -q -y autoremove \
@@ -175,9 +180,63 @@ cd /tmp \
 && echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen \
 && locale-gen \
 && update-locale
+RUN DEBIAN_FRONTEND=noninteractive TERM=xterm \
+bash -c \
+"printf '[global]\ndisable-pip-version-check = True\n' > /usr/share/docassemble/local3.14/pip.conf \
+&& python3 -m venv --copies /usr/share/docassemble/local3.14 \
+&& source /usr/share/docassemble/local3.14/bin/activate \
+&& pip install --upgrade pip==26.2 \
+&& pip install --upgrade mod_wsgi==6.0.5 \
+&& pip install --upgrade \
+   certbot==5.7.0 \
+   certbot-apache==5.7.0 \
+   certbot-nginx==5.7.0 \
+   minio==7.2.20 \
+   uWSGI==2.0.31 \
+&& pip install --no-cache-dir \
+   docassemble.base \
+   docassemble.demo \
+   docassemble.webapp \
+&& { if [[ \"$(dpkg --print-architecture)\" == \"amd64\" ]]; then cp /usr/share/docassemble/local3.14/lib/python3.14/site-packages/mod_wsgi/server/mod_wsgi-py314.cpython-314-x86_64-linux-gnu.so /usr/lib/apache2/modules/mod_wsgi.so-3.14; else cp /usr/share/docassemble/local3.14/lib/python3.14/site-packages/mod_wsgi/server/mod_wsgi-py314.cpython-314-aarch64-linux-gnu.so /usr/lib/apache2/modules/mod_wsgi.so-3.14; fi; } \
+&& rm -f /usr/lib/apache2/modules/mod_wsgi.so \
+&& ln -s /usr/lib/apache2/modules/mod_wsgi.so-3.14 /usr/lib/apache2/modules/mod_wsgi.so \
+&& rm -f /etc/cron.daily/apt-compat \
+&& sed -i -e 's/^\(daemonize\s*\)yes\s*$/\1no/g' -e 's/^bind 127.0.0.1/bind 0.0.0.0/g' /etc/redis/redis.conf \
+&& sed -i -e 's/#APACHE_ULIMIT_MAX_FILES/APACHE_ULIMIT_MAX_FILES/' -e 's/ulimit -n 65536/ulimit -n 8192/' /etc/apache2/envvars \
+&& sed -i '/session    required     pam_loginuid.so/c\#session    required   pam_loginuid.so' /etc/pam.d/cron \
+&& LANG=en_US.UTF-8 \
+&& { a2dismod ssl \
+; a2enmod rewrite \
+; a2enmod xsendfile \
+; a2enmod proxy \
+; a2enmod proxy_http \
+; a2enmod proxy_wstunnel \
+; a2enmod headers \
+; a2enconf docassemble \
+; echo 'export TERM=xterm' >> /etc/bash.bashrc; } \
+&& ln -s /var/mail/mail /var/mail/root \
+&& chmod 755 /etc/ssl/docassemble \
+&& cd /tmp \
+&& /usr/bin/pip3 install --break-system-packages unoserver==3.6 \
+&& cp /usr/local/bin/unoserver /usr/bin/unoserver \
+&& cp /usr/local/bin/unoconvert /usr/bin/unoconvert"
+
 USER www-data
 RUN bash -c \
-"echo '{ \"args\": [\"--no-sandbox\"], \"executablePath\": \"/usr/bin/google-chrome\" }' > ~/puppeteer-config.json"
+"echo '{ \"args\": [\"--no-sandbox\"], \"executablePath\": \"/usr/bin/google-chrome\" }' > ~/puppeteer-config.json \
+&& cd /tmp \
+&& source /usr/share/docassemble/local3.14/bin/activate \
+&& python /tmp/docassemble/nltkdownload.py \
+&& cd /var/www/nltk_data/corpora \
+&& unzip -o wordnet.zip \
+&& unzip -o omw-1.4.zip \
+&& cd /tmp \
+&& mkdir -p /tmp/conv \
+&& pandoc --pdf-engine=lualatex -M latextmpdir=./conv -M pdfa=false /usr/share/docassemble/local3.14/lib/python3.14/site-packages/docassemble/base/data/templates/Legal-Template.yml --template=/usr/share/docassemble/local3.14/lib/python3.14/site-packages/docassemble/base/data/templates/Legal-Template.tex --from=markdown+raw_tex-latex_macros -s -o /tmp/temp.pdf /usr/share/docassemble/local3.14/lib/python3.14/site-packages/docassemble/base/data/templates/hello.md \
+&& rm /tmp/temp.pdf \
+&& pandoc --pdf-engine=lualatex -M latextmpdir=./conv -M pdfa=false --template=/usr/share/docassemble/local3.14/lib/python3.14/site-packages/docassemble/base/data/templates/Legal-Template.rtf -s -o /tmp/temp.rtf /usr/share/docassemble/local3.14/lib/python3.14/site-packages/docassemble/base/data/templates/hello.md \
+&& rm /tmp/temp.rtf"
+
 USER root
 RUN bash -c "\
 if [[ \"$(dpkg --print-architecture)\" == \"arm64\" ]]; then \
@@ -187,6 +246,8 @@ if [[ \"$(dpkg --print-architecture)\" == \"arm64\" ]]; then \
 else \
   echo \"host   all   all  0.0.0.0/0   scram-sha-256\" >> /etc/postgresql/18/main/pg_hba.conf; \
 fi; \
-echo \"listen_addresses = '*'\" >> /etc/postgresql/18/main/postgresql.conf"
+echo \"listen_addresses = '*'\" >> /etc/postgresql/18/main/postgresql.conf; \
+rm /tmp/docassemble/*;"
+
 USER ubuntu
 CMD ["bash"]
