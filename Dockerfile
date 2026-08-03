@@ -1,14 +1,12 @@
 FROM ubuntu:26.04
 USER root
-COPY . /tmp/docassemble/
+RUN mkdir -p /etc/dpkg/dpkg.cfg.d \
+&& printf 'path-exclude /usr/share/doc/*\npath-include /usr/share/doc/*/copyright\npath-exclude /usr/share/man/*\npath-exclude /usr/share/groff/*\npath-exclude /usr/share/info/*\npath-exclude /usr/share/lintian/*\npath-exclude /usr/share/linda/*\n' > /etc/dpkg/dpkg.cfg.d/01_nodoc
 RUN DEBIAN_FRONTEND=noninteractive TERM=xterm \
 apt-get -q -y -o Acquire::Retries=3 update \
 && apt-get -q -y -o Acquire::Retries=3 upgrade \
 && apt-get -q -y -o Acquire::Retries=3 dist-upgrade  \
-&& apt-get -q -y autoremove \
-&& apt-get -q clean
-RUN DEBIAN_FRONTEND=noninteractive TERM=xterm \
-ln -snf /usr/share/zoneinfo/America/New_York /etc/localtime \
+&& ln -snf /usr/share/zoneinfo/America/New_York /etc/localtime \
 && echo America/New_York > /etc/timezone \
 && echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | debconf-set-selections \
 && apt-get -q -y -o Acquire::Retries=3 install language-pack-en \
@@ -122,9 +120,8 @@ pkg-config \
 cmake \
 ninja-build \
 meson \
-libhighs-dev
-RUN DEBIAN_FRONTEND=noninteractive TERM=xterm \
-apt-get -q -y -o Acquire::Retries=3 install \
+libhighs-dev \
+&& apt-get -q -y -o Acquire::Retries=3 install \
 libgdbm-dev \
 libdb5.3-dev \
 libbz2-dev \
@@ -140,19 +137,18 @@ whiptail \
 && rm ttf-mscorefonts-installer_uw11_all.deb \
 && apt-get -q -y remove nodejs \
 && apt-get -q -y remove nodejs-doc \
-&& apt-get -q -y autoremove \
 && curl -fsSL https://deb.nodesource.com/setup_current.x | bash \
 && apt-get -q -y -o Acquire::Retries=3 install nodejs \
+&& npm install -g @mermaid-js/mermaid-cli \
+&& npm cache clean --force \
+&& curl -sL https://aka.ms/InstallAzureCLIDeb | bash \
 && apt-get -q -y autoremove \
 && apt-get -q clean \
-&& npm install -g @mermaid-js/mermaid-cli \
-&& curl -sL https://aka.ms/InstallAzureCLIDeb | bash
-RUN DEBIAN_FRONTEND=noninteractive TERM=xterm \
-bash -c \
-'cd /tmp && if [[ "$(dpkg --print-architecture)" == "amd64" ]]; then wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && dpkg -i ./google-chrome-stable_current_amd64.deb && rm ./google-chrome-stable_current_amd64.deb && wget -q https://github.com/jgm/pandoc/releases/download/3.10.1/pandoc-3.10.1-1-amd64.deb && dpkg -i pandoc-3.10.1-1-amd64.deb && rm pandoc-3.10.1-1-amd64.deb; elif [[ "$(dpkg --print-architecture)" == "arm64" ]]; then wget -q https://github.com/jgm/pandoc/releases/download/3.10.1/pandoc-3.10.1-1-arm64.deb && dpkg -i pandoc-3.10.1-1-arm64.deb && rm pandoc-3.10.1-1-arm64.deb; fi'
+&& rm -rf /var/lib/apt/lists/* \
+&& bash -c \
+'cd /tmp && if [[ "$(dpkg --print-architecture)" == "amd64" ]]; then wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && dpkg -i ./google-chrome-stable_current_amd64.deb && rm ./google-chrome-stable_current_amd64.deb && wget -q https://github.com/jgm/pandoc/releases/download/3.10.1/pandoc-3.10.1-1-amd64.deb && dpkg -i pandoc-3.10.1-1-amd64.deb && rm pandoc-3.10.1-1-amd64.deb; elif [[ "$(dpkg --print-architecture)" == "arm64" ]]; then wget -q https://github.com/jgm/pandoc/releases/download/3.10.1/pandoc-3.10.1-1-arm64.deb && dpkg -i pandoc-3.10.1-1-arm64.deb && rm pandoc-3.10.1-1-arm64.deb; fi;'
 RUN DEBIAN_FRONTEND=noninteractive TERM=xterm \
 cd /tmp \
-&& apt-get -q -y autoremove \
 && sed -i 's|</policymap>|  <policy domain="coder" rights="read \| write" pattern="PDF" />\n</policymap>|' /etc/ImageMagick-7/policy.xml \
 && sed -i 's/^#PATH/PATH/' /etc/crontab
 RUN DEBIAN_FRONTEND=noninteractive TERM=xterm \
@@ -197,6 +193,7 @@ bash -c \
    docassemble.base \
    docassemble.demo \
    docassemble.webapp \
+&& pip cache purge \
 && { if [[ \"$(dpkg --print-architecture)\" == \"amd64\" ]]; then cp /usr/share/docassemble/local3.14/lib/python3.14/site-packages/mod_wsgi/server/mod_wsgi-py314.cpython-314-x86_64-linux-gnu.so /usr/lib/apache2/modules/mod_wsgi.so-3.14; else cp /usr/share/docassemble/local3.14/lib/python3.14/site-packages/mod_wsgi/server/mod_wsgi-py314.cpython-314-aarch64-linux-gnu.so /usr/lib/apache2/modules/mod_wsgi.so-3.14; fi; } \
 && rm -f /usr/lib/apache2/modules/mod_wsgi.so \
 && ln -s /usr/lib/apache2/modules/mod_wsgi.so-3.14 /usr/lib/apache2/modules/mod_wsgi.so \
@@ -218,18 +215,27 @@ bash -c \
 && chmod 755 /etc/ssl/docassemble \
 && cd /tmp \
 && /usr/bin/pip3 install --break-system-packages unoserver==3.6 \
+&& /usr/bin/pip3 cache purge \
 && cp /usr/local/bin/unoserver /usr/bin/unoserver \
 && cp /usr/local/bin/unoconvert /usr/bin/unoconvert"
 
 USER www-data
-RUN bash -c \
+RUN --mount=type=bind,source=.,target=/tmp/nltk \
+bash -c \
 "echo '{ \"args\": [\"--no-sandbox\"], \"executablePath\": \"/usr/bin/google-chrome\" }' > ~/puppeteer-config.json \
 && cd /tmp \
 && source /usr/share/docassemble/local3.14/bin/activate \
-&& python /tmp/docassemble/nltkdownload.py \
+&& python /tmp/nltk/nltkdownload.py \
 && cd /var/www/nltk_data/corpora \
-&& unzip -o wordnet.zip \
-&& unzip -o omw-1.4.zip \
+&& if [ ! -d wordnet ]; then unzip -o wordnet.zip; fi \
+&& if [ ! -d omw-1.4 ]; then unzip -o omw-1.4.zip; fi \
+&& if [ ! -d wordnet_ic ]; then unzip -o wordnet_ic.zip; fi \
+&& if [ ! -d sentiwordnet ]; then unzip -o sentiwordnet.zip; fi \
+&& if [ ! -d stopwords ]; then unzip -o stopwords.zip; fi \
+&& rm -f wordnet.zip omw-1.4.zip wordnet_ic.zip sentiwordnet.zip stopwords.zip \
+&& cd /var/www/nltk_data/tokenizers \
+&& if [ ! -d punkt ]; then unzip -o punkt.zip; fi \
+&& rm -f punkt.zip \
 && cd /tmp \
 && mkdir -p /tmp/conv \
 && pandoc --pdf-engine=lualatex -M latextmpdir=./conv -M pdfa=false /usr/share/docassemble/local3.14/lib/python3.14/site-packages/docassemble/base/data/templates/Legal-Template.yml --template=/usr/share/docassemble/local3.14/lib/python3.14/site-packages/docassemble/base/data/templates/Legal-Template.tex --from=markdown+raw_tex-latex_macros -s -o /tmp/temp.pdf /usr/share/docassemble/local3.14/lib/python3.14/site-packages/docassemble/base/data/templates/hello.md \
@@ -246,8 +252,7 @@ if [[ \"$(dpkg --print-architecture)\" == \"arm64\" ]]; then \
 else \
   echo \"host   all   all  0.0.0.0/0   scram-sha-256\" >> /etc/postgresql/18/main/pg_hba.conf; \
 fi; \
-echo \"listen_addresses = '*'\" >> /etc/postgresql/18/main/postgresql.conf; \
-rm /tmp/docassemble/*;"
+echo \"listen_addresses = '*'\" >> /etc/postgresql/18/main/postgresql.conf;"
 
 USER ubuntu
 CMD ["bash"]
