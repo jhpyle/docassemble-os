@@ -146,7 +146,7 @@ whiptail \
 && apt-get -q clean \
 && rm -rf /var/lib/apt/lists/* \
 && bash -c \
-'cd /tmp && if [[ "$(dpkg --print-architecture)" == "amd64" ]]; then wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && dpkg -i ./google-chrome-stable_current_amd64.deb && rm ./google-chrome-stable_current_amd64.deb && wget -q https://github.com/jgm/pandoc/releases/download/3.10.1/pandoc-3.10.1-1-amd64.deb && dpkg -i pandoc-3.10.1-1-amd64.deb && rm pandoc-3.10.1-1-amd64.deb; elif [[ "$(dpkg --print-architecture)" == "arm64" ]]; then wget -q https://github.com/jgm/pandoc/releases/download/3.10.1/pandoc-3.10.1-1-arm64.deb && dpkg -i pandoc-3.10.1-1-arm64.deb && rm pandoc-3.10.1-1-arm64.deb; fi;'
+'cd /tmp && if [[ "$(dpkg --print-architecture)" == "amd64" ]]; then wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && dpkg -i ./google-chrome-stable_current_amd64.deb && rm ./google-chrome-stable_current_amd64.deb && wget -q https://github.com/jgm/pandoc/releases/download/3.12.1/pandoc-3.12.1-1-amd64.deb && dpkg -i pandoc-3.12.1-1-amd64.deb && rm pandoc-3.12.1-1-amd64.deb; elif [[ "$(dpkg --print-architecture)" == "arm64" ]]; then wget -q https://github.com/jgm/pandoc/releases/download/3.12.1/pandoc-3.12.1-1-arm64.deb && dpkg -i pandoc-3.12.1-1-arm64.deb && rm pandoc-3.12.1-1-arm64.deb; fi;'
 RUN DEBIAN_FRONTEND=noninteractive TERM=xterm \
 cd /tmp \
 && sed -i 's|</policymap>|  <policy domain="coder" rights="read \| write" pattern="PDF" />\n</policymap>|' /etc/ImageMagick-7/policy.xml \
@@ -181,7 +181,7 @@ bash -c \
 "printf '[global]\ndisable-pip-version-check = True\n' > /usr/share/docassemble/local3.14/pip.conf \
 && python3 -m venv --copies /usr/share/docassemble/local3.14 \
 && source /usr/share/docassemble/local3.14/bin/activate \
-&& pip install --upgrade pip==26.2 \
+&& pip install --upgrade pip==26.2.2 \
 && pip install --upgrade mod_wsgi==6.0.5 \
 && pip install --upgrade \
    certbot==5.7.0 \
