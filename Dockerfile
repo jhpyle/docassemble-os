@@ -1,4 +1,4 @@
-FROM ubuntu:26.04
+FROM ubuntu:26.04.1
 USER root
 RUN mkdir -p /etc/dpkg/dpkg.cfg.d \
 && printf 'path-exclude /usr/share/doc/*\npath-include /usr/share/doc/*/copyright\npath-exclude /usr/share/man/*\npath-exclude /usr/share/groff/*\npath-exclude /usr/share/info/*\npath-exclude /usr/share/lintian/*\npath-exclude /usr/share/linda/*\n' > /etc/dpkg/dpkg.cfg.d/01_nodoc
@@ -146,7 +146,7 @@ whiptail \
 && apt-get -q clean \
 && rm -rf /var/lib/apt/lists/* \
 && bash -c \
-'cd /tmp && if [[ "$(dpkg --print-architecture)" == "amd64" ]]; then wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && dpkg -i ./google-chrome-stable_current_amd64.deb && rm ./google-chrome-stable_current_amd64.deb && wget -q https://github.com/jgm/pandoc/releases/download/3.12.1/pandoc-3.12.1-1-amd64.deb && dpkg -i pandoc-3.12.1-1-amd64.deb && rm pandoc-3.12.1-1-amd64.deb; elif [[ "$(dpkg --print-architecture)" == "arm64" ]]; then wget -q https://github.com/jgm/pandoc/releases/download/3.12.1/pandoc-3.12.1-1-arm64.deb && dpkg -i pandoc-3.12.1-1-arm64.deb && rm pandoc-3.12.1-1-arm64.deb; fi;'
+'cd /tmp && if [[ "$(dpkg --print-architecture)" == "amd64" ]]; then wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && dpkg -i ./google-chrome-stable_current_amd64.deb && rm ./google-chrome-stable_current_amd64.deb && wget -q https://github.com/jgm/pandoc/releases/download/3.13/pandoc-3.13-1-amd64.deb && dpkg -i pandoc-3.13-1-amd64.deb && rm pandoc-3.13-1-amd64.deb; elif [[ "$(dpkg --print-architecture)" == "arm64" ]]; then wget -q https://github.com/jgm/pandoc/releases/download/3.13/pandoc-3.13-1-arm64.deb && dpkg -i pandoc-3.13-1-arm64.deb && rm pandoc-3.13-1-arm64.deb; fi;'
 RUN DEBIAN_FRONTEND=noninteractive TERM=xterm \
 cd /tmp \
 && sed -i 's|</policymap>|  <policy domain="coder" rights="read \| write" pattern="PDF" />\n</policymap>|' /etc/ImageMagick-7/policy.xml \
@@ -182,11 +182,11 @@ bash -c \
 && python3 -m venv --copies /usr/share/docassemble/local3.14 \
 && source /usr/share/docassemble/local3.14/bin/activate \
 && pip install --upgrade pip==26.2.2 \
-&& pip install --upgrade mod_wsgi==6.0.5 \
+&& pip install --upgrade mod_wsgi==6.1.1 \
 && pip install --upgrade \
-   certbot==5.7.0 \
-   certbot-apache==5.7.0 \
-   certbot-nginx==5.7.0 \
+   certbot==5.8.1 \
+   certbot-apache==5.8.1 \
+   certbot-nginx==5.8.1 \
    minio==7.2.20 \
    uWSGI==2.0.31 \
 && pip install --no-cache-dir \
@@ -214,7 +214,7 @@ bash -c \
 && ln -s /var/mail/mail /var/mail/root \
 && chmod 755 /etc/ssl/docassemble \
 && cd /tmp \
-&& /usr/bin/pip3 install --break-system-packages unoserver==3.6 \
+&& /usr/bin/pip3 install --break-system-packages unoserver==3.7 \
 && /usr/bin/pip3 cache purge \
 && cp /usr/local/bin/unoserver /usr/bin/unoserver \
 && cp /usr/local/bin/unoconvert /usr/bin/unoconvert"
