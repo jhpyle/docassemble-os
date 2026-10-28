@@ -1,4 +1,4 @@
-FROM ubuntu:26.04.1
+FROM ubuntu:26.04
 USER root
 RUN mkdir -p /etc/dpkg/dpkg.cfg.d \
 && printf 'path-exclude /usr/share/doc/*\npath-include /usr/share/doc/*/copyright\npath-exclude /usr/share/man/*\npath-exclude /usr/share/groff/*\npath-exclude /usr/share/info/*\npath-exclude /usr/share/lintian/*\npath-exclude /usr/share/linda/*\n' > /etc/dpkg/dpkg.cfg.d/01_nodoc
@@ -184,9 +184,9 @@ bash -c \
 && pip install --upgrade pip==26.2.2 \
 && pip install --upgrade mod_wsgi==6.1.1 \
 && pip install --upgrade \
-   certbot==5.8.1 \
-   certbot-apache==5.8.1 \
-   certbot-nginx==5.8.1 \
+   certbot==5.8.0 \
+   certbot-apache==5.8.0 \
+   certbot-nginx==5.8.0 \
    minio==7.2.20 \
    uWSGI==2.0.31 \
 && pip install --no-cache-dir \
