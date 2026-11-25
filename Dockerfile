@@ -181,7 +181,7 @@ bash -c \
 "printf '[global]\ndisable-pip-version-check = True\n' > /usr/share/docassemble/local3.14/pip.conf \
 && python3 -m venv --copies /usr/share/docassemble/local3.14 \
 && source /usr/share/docassemble/local3.14/bin/activate \
-&& pip install --upgrade pip==26.2.2 \
+&& pip install --upgrade pip==26.3 \
 && pip install --upgrade mod_wsgi==6.1.1 \
 && pip install --upgrade \
    certbot==5.10.0 \
